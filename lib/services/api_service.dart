@@ -92,7 +92,7 @@ Future<Map<String, dynamic>> apiGetNewTokens({
   required String refreshtoken,
 }) async {
   final url = Uri.https(mainAddress, '/api/token/getnew', {
-    'RefreshToken': refreshToken,
+    'RefreshToken': refreshtoken,
   });
   appLog(url.toString());
 
@@ -156,7 +156,7 @@ Future<Map<String, dynamic>> apiCehckOtp({
 }
 
 Future<Map<String, dynamic>> apiChangePassword({
-  required int userid,
+  required String userid,
   required String otpcode,
   required String newpassword,
 }) async {
@@ -193,6 +193,38 @@ Future<Map<String, dynamic>> apiUserInfo({required String userid}) async {
       throw Exception('api error: ${response.statusCode}');
     }
   } catch (e) {
+    throw Exception('$e');
+  }
+}
+
+Future<List<Map<String, dynamic>>> apiCredits({
+  required String token,
+  required String userid,
+}) async {
+  final url = Uri.https(mainAddress, 'api/dashboard/credits', {
+    'UserId': userid,
+  });
+  appLog(url.toString());
+
+  try {
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );    
+    if (response.statusCode == 200) {
+      appLog('eee1 : ${response.statusCode}');
+      final List<dynamic> data = jsonDecode(response.body);
+      appLog('eee2 : ${data.toString()}');
+      return data.cast<Map<String, dynamic>>();
+    } else {
+      appLog('eee1 : ${response.statusCode}');
+      throw Exception('api error: ${response.statusCode}');
+    }
+  } catch (e) {
+    appLog('eee5 : $e');
     throw Exception('$e');
   }
 }

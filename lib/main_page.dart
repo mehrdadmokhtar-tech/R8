@@ -19,6 +19,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+
     _loadCache();
     _checkAuth();
   }
@@ -62,20 +63,25 @@ class _MainPageState extends State<MainPage> {
     } else {
       // تلاش برای دریافت اکسس توکن جدید
       final Map<String, dynamic> data;
-      data = await apiGetNewTokens(refreshtoken: refreshToken);
-      if (!mounted) return;
-      if (data['returnValue'] == 1) {
-        final accessToken = data['accessToken'] ?? '';
-        final refreshToken = data['refreshToken'] ?? '';
-        await StorageService.instance.saveTokens(
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-        );
+      try {
+        data = await apiGetNewTokens(refreshtoken: refreshToken.toString());
         if (!mounted) return;
-        Navigator.pushReplacementNamed(context, '/dashboard');
-      } else {
-        Navigator.pushReplacementNamed(context, '/login');
-      }
+        if (data['returnValue'] == 1) {
+          final accessToken = data['accessToken'] ?? '';
+          final refreshToken = data['refreshToken'] ?? '';
+          await StorageService.instance.saveTokens(
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+          );
+          if (!mounted) return;
+          Navigator.pushReplacementNamed(context, '/dashboard');
+        } else {
+          Navigator.pushReplacementNamed(context, '/login');
+        }
+      } catch (e) {
+        showTopSnackBar(context, 2, 3, '$e');
+        appLog('$e');
+      }      
     }
   }
 
