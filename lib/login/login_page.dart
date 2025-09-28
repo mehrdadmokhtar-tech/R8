@@ -21,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _isLoginLoading = false; // لودینگ دکمه لاگین
   bool _isNfcLoading = false; // لودینگ دکمه NFC
+  bool _obscurePassword = true;
   String? _serverError; // پیام خطای سرور
 
   @override
@@ -73,10 +74,7 @@ class _LoginPageState extends State<LoginPage> {
         );
 
         if (!mounted) return;
-        Navigator.pushReplacementNamed(
-          context,
-          '/dashboard'
-        );
+        Navigator.pushReplacementNamed(context, '/dashboard');
       } else {
         showTopSnackBar(context, 2, 3, data['returnMessage']);
       }
@@ -174,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
                         // Password
                         TextFormField(
                           controller: passwordController,
-                          obscureText: true,
+                          obscureText: _obscurePassword,
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             prefixIcon: const Icon(
@@ -201,6 +199,18 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Color.fromARGB(87, 0, 187, 212),
                                 width: 2.5,
                               ),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
                             ),
                           ),
                           validator: (value) {
@@ -348,14 +358,14 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
 
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 35),
 
                         RichText(
                           text: TextSpan(
                             text: "Never logged in before ? ",
                             style: const TextStyle(
                               color: Colors.white70,
-                              fontSize: 14,
+                              fontSize: 15,
                             ),
                             children: [
                               TextSpan(

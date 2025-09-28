@@ -104,7 +104,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       "Please enter your information to get OTP",
                       style: TextStyle(
                         fontSize: 13,
-                        fontWeight: FontWeight.w100,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: 0.3,
                         color: Colors.white60,
                       ),
