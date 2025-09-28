@@ -101,15 +101,15 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/icon/icon.png"
+  image_path: "assets/images/logo.png"
 
 flutter_native_splash:
   android: true
   ios: true
   color: "#ffffff"
   color_dark: "#000000"
-  image: "assets/images/launch_logo.png"
+  image: "assets/images/luncher.png"
   android_12:
     color: "#000000"
     color_dark: "#000000"
-    image: "assets/images/launch_logo.png"
+    image: "assets/images/luncher.png"

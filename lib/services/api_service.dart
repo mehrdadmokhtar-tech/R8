@@ -20,7 +20,7 @@ Future<Map<String, dynamic>> apiLogin({
       final Map<String, dynamic> data = jsonDecode(response.body);
       return data;
     } else {
-      throw Exception('api error: ${response.statusCode}');
+      throw Exception('Api call error : ${response.statusCode}');
     }
   } catch (e) {
     throw Exception('$e');
@@ -37,7 +37,7 @@ Future<Map<String, dynamic>> apiNFCLogin({required String tagno}) async {
       final Map<String, dynamic> data = jsonDecode(response.body);
       return data;
     } else {
-      throw Exception('api error: ${response.statusCode}');
+      throw Exception('Api call error : ${response.statusCode}');
     }
   } catch (e) {
     throw Exception('$e');
@@ -58,7 +58,7 @@ Future<Map<String, dynamic>> refreshToken({
       final Map<String, dynamic> data = jsonDecode(response.body);
       return data;
     } else {
-      throw Exception('api error: ${response.statusCode}');
+      throw Exception('Api call error : ${response.statusCode}');
     }
   } catch (e) {
     throw Exception('$e');
@@ -102,7 +102,7 @@ Future<Map<String, dynamic>> apiGetNewTokens({
       final Map<String, dynamic> data = jsonDecode(response.body);
       return data;
     } else {
-      throw Exception('api error: ${response.statusCode}');
+      throw Exception('Api call error : ${response.statusCode}');
     }
   } catch (e) {
     throw Exception('$e');
@@ -125,7 +125,7 @@ Future<Map<String, dynamic>> apiRegister({
       final Map<String, dynamic> data = jsonDecode(response.body);
       return data;
     } else {
-      throw Exception('api error: ${response.statusCode}');
+      throw Exception('Api call error : ${response.statusCode}');
     }
   } catch (e) {
     throw Exception('$e');
@@ -148,7 +148,7 @@ Future<Map<String, dynamic>> apiCehckOtp({
       final Map<String, dynamic> data = jsonDecode(response.body);
       return data;
     } else {
-      throw Exception('api error: ${response.statusCode}');
+      throw Exception('Api call error : ${response.statusCode}');
     }
   } catch (e) {
     throw Exception('$e');
@@ -173,7 +173,7 @@ Future<Map<String, dynamic>> apiChangePassword({
       final Map<String, dynamic> data = jsonDecode(response.body);
       return data;
     } else {
-      throw Exception('api error: ${response.statusCode}');
+      throw Exception('Api call error : ${response.statusCode}');
     }
   } catch (e) {
     throw Exception('$e');
@@ -190,18 +190,18 @@ Future<Map<String, dynamic>> apiUserInfo({required String userid}) async {
       final Map<String, dynamic> data = jsonDecode(response.body);
       return data;
     } else {
-      throw Exception('api error: ${response.statusCode}');
+      throw Exception('Api call error : ${response.statusCode}');
     }
   } catch (e) {
     throw Exception('$e');
   }
 }
 
-Future<List<Map<String, dynamic>>> apiCredits({
+Future<List<Map<String, dynamic>>> apiMemberCredits({
   required String token,
   required String userid,
 }) async {
-  final url = Uri.https(mainAddress, 'api/dashboard/credits', {
+  final url = Uri.https(mainAddress, 'api/dashboard/member-credits', {
     'UserId': userid,
   });
   appLog(url.toString());
@@ -213,18 +213,42 @@ Future<List<Map<String, dynamic>>> apiCredits({
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
-    );    
+    );
     if (response.statusCode == 200) {
-      appLog('eee1 : ${response.statusCode}');
       final List<dynamic> data = jsonDecode(response.body);
-      appLog('eee2 : ${data.toString()}');
       return data.cast<Map<String, dynamic>>();
     } else {
-      appLog('eee1 : ${response.statusCode}');
-      throw Exception('api error: ${response.statusCode}');
+      throw Exception('Api call error : ${response.statusCode}');
     }
   } catch (e) {
-    appLog('eee5 : $e');
+    throw Exception('$e');
+  }
+}
+
+Future<List<Map<String, dynamic>>> apiMemeberPackages({
+  required String token,
+  required String userid,
+}) async {
+  final url = Uri.https(mainAddress, 'api/dashboard/member-packages', {
+    'UserId': userid,
+  });
+  appLog(url.toString());
+
+  try {
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Api call error : ${response.statusCode}');
+    }
+  } catch (e) {
     throw Exception('$e');
   }
 }

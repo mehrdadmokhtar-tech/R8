@@ -25,11 +25,14 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Future<void> _loadUserInfo() async {
-    try{
+    try {
       final accessToken = await storage.read(key: 'access_token');
       final userid = CacheService.instance.userId.toString();
 
-      final datas = await apiCredits(token: accessToken.toString(), userid : userid);
+      final datas = await apiMemberCredits(
+        token: accessToken.toString(),
+        userid: userid,
+      );
       if (!mounted) return;
       for (var data in datas) {
         appLog('wallet : ${data['wallet'].toString()}');
@@ -37,9 +40,10 @@ class _DashboardPageState extends State<DashboardPage> {
         appLog('train : ${data['train'].toString()}');
       }
     } catch (e) {
-      showTopSnackBar(context, 2, 3, '$e');
-      appLog('error : $e');
-    }      
+      String errText = errorTracking(e.toString());
+      showTopSnackBar(context, 2, 3, errText);
+      appLog('error : $errText');
+    }
     appLog('user id ${CacheService.instance.userId.toString()}');
     appLog('user fullname ${CacheService.instance.userFullName.toString()}');
   }

@@ -5,6 +5,12 @@ void appLog(String message) {
   debugPrint("📌 [MY_APP] $message");
 }
 
+String errorTracking(String errText) {
+  String outText;
+  outText = errText.replaceAll("Exception: ", "");
+  return outText;
+}
+
 void showDialogMessage(BuildContext context, String message) {
   showDialog(
     context: context,
@@ -76,7 +82,7 @@ Future<T?> showCustomBottomSheet<T>(
     context: context,
     barrierDismissible: true,
     barrierLabel: '',
-    barrierColor: Colors.black.withValues(alpha : 0.3), // پس‌زمینه نیمه شفاف
+    barrierColor: Colors.black.withValues(alpha: 0.3), // پس‌زمینه نیمه شفاف
     transitionDuration: duration,
     pageBuilder: (context, anim1, anim2) {
       return Align(
