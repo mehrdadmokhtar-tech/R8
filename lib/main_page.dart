@@ -64,7 +64,7 @@ class _MainPageState extends State<MainPage> {
       // تلاش برای دریافت اکسس توکن جدید
       final Map<String, dynamic> data;
       try {
-        data = await apiGetNewTokens(refreshtoken: refreshToken.toString());
+        data = await apiGetNewToken(refreshtoken: refreshToken.toString());
         if (!mounted) return;
         if (data['returnValue'] == 1) {
           final accessToken = data['accessToken'] ?? '';
@@ -81,7 +81,7 @@ class _MainPageState extends State<MainPage> {
       } catch (e) {
         showTopSnackBar(context, 2, 3, '$e');
         appLog('$e');
-      }      
+      }
     }
   }
 

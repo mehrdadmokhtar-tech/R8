@@ -88,10 +88,10 @@ Future<Map<String, dynamic>> apiForgotPassword({
   }
 }
 
-Future<Map<String, dynamic>> apiGetNewTokens({
+Future<Map<String, dynamic>> apiGetNewToken({
   required String refreshtoken,
 }) async {
-  final url = Uri.https(mainAddress, '/api/token/getnew', {
+  final url = Uri.https(mainAddress, '/api/user/newtoken', {
     'RefreshToken': refreshtoken,
   });
   appLog(url.toString());
