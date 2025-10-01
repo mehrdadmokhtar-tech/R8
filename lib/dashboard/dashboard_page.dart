@@ -85,7 +85,7 @@ class _DashboardPageState extends State<DashboardPage> {
 Widget _buildDashboardContent() {
   return SafeArea(
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -96,7 +96,7 @@ Widget _buildDashboardContent() {
               Container(
                 height: 100,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
@@ -106,7 +106,7 @@ Widget _buildDashboardContent() {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 10),
                     Text(
                       'User ID: ${userId.toString()}',
                       style: TextStyle(fontSize: 16, color: Colors.grey[600]),
@@ -114,10 +114,10 @@ Widget _buildDashboardContent() {
                   ],
                 ),
               ),
-              SizedBox(width: 20),
+              SizedBox(width: 15),
               Container(
-                width: 100,
-                height: 100,
+                width: 75,
+                height: 75,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
@@ -137,7 +137,7 @@ Widget _buildDashboardContent() {
             ],
           ),
 
-          SizedBox(height: 40),
+          SizedBox(height: 20),
 
           Container(
             padding: const EdgeInsets.all(18),
