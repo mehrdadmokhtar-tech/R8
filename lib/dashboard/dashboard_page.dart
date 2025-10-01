@@ -85,7 +85,7 @@ class _DashboardPageState extends State<DashboardPage> {
 Widget _buildDashboardContent() {
   return SafeArea(
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 35),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
