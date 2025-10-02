@@ -173,7 +173,7 @@ Widget _buildDashboardContent() {
                   ],
                 ),
 
-                // سمت راست: تعداد قدم‌ها + زمان
+                // سمت راست
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -183,7 +183,7 @@ Widget _buildDashboardContent() {
                           TextSpan(
                             text: "12 ",
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -191,7 +191,7 @@ Widget _buildDashboardContent() {
                           TextSpan(
                             text: "Sessions",
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 12,
                               fontWeight: FontWeight.w400,
                               color: Colors.grey,
                             ),
@@ -244,7 +244,7 @@ Widget _buildDashboardContent() {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // سمت چپ: آیکن + متن Walking
+                // سمت چپ: آیکن + متن
                 Column(
                   children: [
                     SvgPicture.asset(
