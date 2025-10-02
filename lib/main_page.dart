@@ -113,9 +113,15 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.black,
-      body: Center(child: CircularProgressIndicator(color: Colors.tealAccent)),
+      body: Center(
+        child: Image.asset(
+          "assets/images/logo-animate.gif",
+          width: 170,
+          height: 170,
+        ),
+      ),
     );
   }
 }

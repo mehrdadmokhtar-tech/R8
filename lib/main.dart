@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(textTheme: GoogleFonts.rubikTextTheme()),
       home: const MainPage(),
       routes: {
+        '/main': (context) => MyApp(),
         '/login': (context) => LoginPage(),
         '/forgotpass': (context) => ForgotPassPage(),
         '/changepass': (context) => ChangePassPage(),

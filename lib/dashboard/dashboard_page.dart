@@ -3,8 +3,8 @@ import 'package:r8fitness/utils/utils.dart';
 import 'package:r8fitness/services/api_service.dart';
 import 'package:r8fitness/services/cache_service.dart';
 import 'package:r8fitness/dashboard/navigation_layout.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 int? userId = CacheService.instance.userId;
 String? userFullName = CacheService.instance.userFullName;
@@ -63,8 +63,12 @@ class _DashboardPageState extends State<DashboardPage> {
             Icons.power_settings_new,
             size: 30,
           ), // آیکون پاور برای خارج شدن
-          onPressed: () {
-            Navigator.pop(context); // برمی‌گرده به صفحه قبل
+          onPressed: () async {
+            await storage.deleteAll();
+            if (!mounted) return;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.pushReplacementNamed(context, '/main');
+            });
           },
         ),
         title: Text(
@@ -88,33 +92,11 @@ Widget _buildDashboardContent() {
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                height: 100,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      userFullName.toString(),
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'User ID: ${userId.toString()}',
-                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(width: 15),
               Container(
                 width: 75,
                 height: 75,
@@ -130,6 +112,28 @@ Widget _buildDashboardContent() {
                       spreadRadius: 2,
                       blurRadius: 5,
                       offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 15),
+              Container(
+                height: 100,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Member ID: ${userId.toString()}',
+                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      userFullName.toString(),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
