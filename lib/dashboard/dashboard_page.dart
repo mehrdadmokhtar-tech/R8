@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:r8fitness/utils/utils.dart';
 import 'package:r8fitness/services/api_service.dart';
 import 'package:r8fitness/services/cache_service.dart';
@@ -17,7 +18,8 @@ class _DashboardPageState extends State<DashboardPage> {
   bool _isLoading = true;
   final storage = const FlutterSecureStorage();
   int? _userId;
-  String? _userFullName;
+  String? _userName;
+  String? _userPhoto;
 
   @override
   void initState() {
@@ -37,7 +39,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
       setState(() {
         _userId = CacheService.instance.userId;
-        _userFullName = CacheService.instance.userFullName;
+        _userName = CacheService.instance.userName;
+        _userPhoto = CacheService.instance.userPhoto;
         _isLoading = false;
       });
 
@@ -55,10 +58,10 @@ class _DashboardPageState extends State<DashboardPage> {
       String errText = errorTracking(e.toString());
       showTopSnackBar(context, 2, 3, errText);
       appLog('error : $errText');
-      setState(() => _isLoading = false);
+      setState(() => _isLoading = false);      
     }
     //appLog('user id ${CacheService.instance.userId.toString()}');
-    //appLog('user fullname ${CacheService.instance.userFullName.toString()}');
+    //appLog('user fullname ${CacheService.instance.userName.toString()}');
   }
 
   @override
@@ -70,7 +73,7 @@ class _DashboardPageState extends State<DashboardPage> {
           child: CircularProgressIndicator(color: Colors.tealAccent),
         ),
       );
-    }
+    }    
 
     return NavigationLayout(
       currentIndex: 0,
@@ -122,9 +125,10 @@ class _DashboardPageState extends State<DashboardPage> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: AssetImage('assets/images/user-profile.jpg'),
-                      fit: BoxFit.cover,
-                    ),
+                      image: _userPhoto != null
+                            ? MemoryImage(base64Decode(_userPhoto!)) as ImageProvider
+                            : const AssetImage('assets/images/user-profile.jpg'),                      fit: BoxFit.cover,
+                      ),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withValues(alpha: 0.5),
@@ -148,7 +152,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        _userFullName.toString(),
+                        _userName.toString(),
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

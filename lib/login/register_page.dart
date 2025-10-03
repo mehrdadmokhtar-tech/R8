@@ -41,7 +41,6 @@ class _RegisterPageState extends State<RegisterPage> {
         mobileno: mobileno,
       );
       if (!mounted) return;
-
       if (data['returnValue'] == 1) {
         await Navigator.pushReplacementNamed(
           context,
