@@ -35,7 +35,8 @@ class _ChangePassPageState extends State<ChangePassPage> {
       return;
     }
 
-    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     try {
       List<String> nullItems = findNullKeys(args);
       if (nullItems.isNotEmpty) {
@@ -45,15 +46,17 @@ class _ChangePassPageState extends State<ChangePassPage> {
           3,
           'runtime error : args has null key ; $nullItems',
         );
-      }    
+      }
     } catch (e) {
       showTopSnackBar(context, 2, 3, '$e');
     }
+    // appLog(args['userId'].toString());
+    // appLog(args['serverOtp'].toString());
 
     try {
       final data = await apiChangePassword(
-        userid: args['userId'],
-        otpcode: args['serverOtp'],
+        userid: args['userId'].toString(),
+        otpcode: args['serverOtp'].toString(),
         newpassword: newPassword,
       );
       if (!mounted) return;

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:r8fitness/services/api_service.dart';
 import 'package:r8fitness/services/storage_service.dart';
-import 'package:r8fitness/services/cache_service.dart';
 import 'package:r8fitness/utils/utils.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -14,29 +13,18 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final storage = const FlutterSecureStorage();
-
   @override
   void initState() {
     super.initState();
-
-    _loadCache();
     _checkAuth();
   }
 
-  Future<void> _loadCache() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await CacheService.instance.load();
-
-    appLog('کش لود');
-    appLog('user id ${CacheService.instance.userId.toString()}');
-    appLog('user fullname ${CacheService.instance.userFullName.toString()}');
-  }
-
   Future<void> _checkAuth() async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    final storage = const FlutterSecureStorage();
     final accessToken = await storage.read(key: 'access_token');
     final refreshToken = await storage.read(key: 'refresh_token');
-
     if (!mounted) return;
 
     appLog('توکن لود');
@@ -113,9 +101,15 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.black,
-      body: Center(child: CircularProgressIndicator(color: Colors.tealAccent)),
+      body: Center(
+        child: Image.asset(
+          "assets/images/logo-animate.gif",
+          width: 170,
+          height: 170,
+        ),
+      ),
     );
   }
 }

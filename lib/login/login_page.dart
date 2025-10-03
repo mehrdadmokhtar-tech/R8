@@ -369,7 +369,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             children: [
                               TextSpan(
-                                text: "Register now",
+                                text: "Register",
                                 style: const TextStyle(
                                   color: Color.fromARGB(255, 0, 184, 212),
                                   fontWeight: FontWeight.bold,
