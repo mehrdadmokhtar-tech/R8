@@ -67,10 +67,12 @@ class _LoginPageState extends State<LoginPage> {
 
         //ذخیره اطلاعات یوزر
         final int userId = data['userId'] ?? 0;
-        final String fullName = data['userFullName'] ?? '';
+        final String userName = data['userName'] ?? '';
+        final String userPhoto = data['userPhoto'] ?? '';
         await CacheService.instance.save(
           userId: userId,
-          userFullName: fullName,
+          userName: userName,
+          userPhoto: userPhoto,
         );
 
         if (!mounted) return;
@@ -369,7 +371,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             children: [
                               TextSpan(
-                                text: "Register now",
+                                text: "Register",
                                 style: const TextStyle(
                                   color: Color.fromARGB(255, 0, 184, 212),
                                   fontWeight: FontWeight.bold,

@@ -49,11 +49,13 @@ class _ChangePassPageState extends State<ChangePassPage> {
     } catch (e) {
       showTopSnackBar(context, 2, 3, '$e');
     }
-
+    // appLog(args['userId'].toString());
+    // appLog(args['serverOtp'].toString());
+    
     try {
       final data = await apiChangePassword(
-        userid: args['userId'],
-        otpcode: args['serverOtp'],
+        userid: args['userId'].toString(),
+        otpcode: args['serverOtp'].toString(),
         newpassword: newPassword,
       );
       if (!mounted) return;

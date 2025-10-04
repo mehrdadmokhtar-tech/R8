@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:r8fitness/utils/utils.dart';
 import 'package:r8fitness/services/api_service.dart';
 import 'package:r8fitness/services/cache_service.dart';
 import 'package:r8fitness/dashboard/navigation_layout.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-int? userId = CacheService.instance.userId;
-String? userFullName = CacheService.instance.userFullName;
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -17,23 +15,38 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  bool _isLoading = true;
   final storage = const FlutterSecureStorage();
+  int? _userId;
+  String? _userName;
+  String? _userPhoto;
 
   @override
   void initState() {
     super.initState();
 
-    _loadUserInfo();
+    _loadPageInfo();
   }
 
-  Future<void> _loadUserInfo() async {
+  Future<void> _loadPageInfo() async {
     try {
+      await CacheService.instance.load();
+
       final accessToken = await storage.read(key: 'access_token');
-      final userid = CacheService.instance.userId.toString();
+      final userid = CacheService.instance.userId;
+
+      if (userid == null && accessToken == null) return;
+
+      setState(() {
+        _userId = CacheService.instance.userId;
+        _userName = CacheService.instance.userName;
+        _userPhoto = CacheService.instance.userPhoto;
+        _isLoading = false;
+      });
 
       final datas = await apiMemberCredits(
         token: accessToken.toString(),
-        userid: userid,
+        userid: userid.toString(),
       );
       if (!mounted) return;
       for (var data in datas) {
@@ -45,13 +58,23 @@ class _DashboardPageState extends State<DashboardPage> {
       String errText = errorTracking(e.toString());
       showTopSnackBar(context, 2, 3, errText);
       appLog('error : $errText');
+      setState(() => _isLoading = false);
     }
-    appLog('user id ${CacheService.instance.userId.toString()}');
-    appLog('user fullname ${CacheService.instance.userFullName.toString()}');
+    //appLog('user id ${CacheService.instance.userId.toString()}');
+    //appLog('user fullname ${CacheService.instance.userName.toString()}');
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: CircularProgressIndicator(color: Colors.tealAccent),
+        ),
+      );
+    }
+
     return NavigationLayout(
       currentIndex: 0,
       appBar: AppBar(
@@ -84,242 +107,245 @@ class _DashboardPageState extends State<DashboardPage> {
       body: _buildDashboardContent(),
     );
   }
-}
 
-Widget _buildDashboardContent() {
-  return SafeArea(
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                width: 75,
-                height: 75,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/user-profile.jpg'),
-                    fit: BoxFit.cover,
+  Widget _buildDashboardContent() {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  width: 75,
+                  height: 75,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: _userPhoto != null
+                          ? MemoryImage(base64Decode(_userPhoto!))
+                                as ImageProvider
+                          : const AssetImage('assets/images/user-profile.jpg'),
+                      fit: BoxFit.cover,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withValues(alpha: 0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withValues(alpha: 0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
                 ),
-              ),
-              SizedBox(width: 15),
-              Container(
-                height: 100,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Member ID: ${userId.toString()}',
-                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      userFullName.toString(),
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                SizedBox(width: 15),
+                SizedBox(
+                  height: 100,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Member ID:  ${_userId.toString()}',
+                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-
-          SizedBox(height: 20),
-
-          Container(
-            padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.2),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // سمت چپ: آیکن + متن Walking
-                Column(
-                  children: [
-                    SvgPicture.asset(
-                      "assets/images/icons/dumbbell.svg", // مسیر فایل svg خودت
-                      width: 50,
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      "Cross Fit",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-
-                // سمت راست
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "12 ",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "Sessions",
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(height: 2),
-                    RawChip(
-                      label: const Text(
-                        "Started 1 October",
+                      SizedBox(height: 10),
+                      Text(
+                        _userName.toString(),
                         style: TextStyle(
-                          color: Color.fromARGB(255, 255, 138, 4),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w300,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      backgroundColor: Color.fromARGB(22, 255, 138, 4),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        side: BorderSide.none,
-                      ),
-                      elevation: 0, // بدون سایه
-                      shadowColor: Colors.transparent,
-                      pressElevation: 0, // موقع کلیک هم سایه نندازه
-                      side: BorderSide.none, // بعضی تم‌ها اینجا لازمه
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
 
-          SizedBox(height: 15),
+            SizedBox(height: 20),
 
-          Container(
-            padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.2),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // سمت چپ: آیکن + متن
-                Column(
-                  children: [
-                    SvgPicture.asset(
-                      "assets/images/icons/buffet.svg", // مسیر فایل svg خودت
-                      width: 50,
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      "Buffet",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+            Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withValues(alpha: 0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // سمت چپ: آیکن + متن Walking
+                  Column(
+                    children: [
+                      SvgPicture.asset(
+                        "assets/images/icons/dumbbell.svg", // مسیر فایل svg خودت
+                        width: 50,
                       ),
-                    ),
-                  ],
-                ),
-
-                // سمت راست: تعداد قدم‌ها + زمان
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "10,000,000 ",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "Rls",
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(height: 2),
-                    RawChip(
-                      label: const Text(
-                        "Started 1 October",
+                      const SizedBox(height: 10),
+                      const Text(
+                        "Cross Fit",
                         style: TextStyle(
-                          color: Color.fromARGB(255, 0, 184, 212),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w300,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      backgroundColor: Color.fromARGB(22, 0, 184, 212),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        side: BorderSide.none,
+                    ],
+                  ),
+
+                  // سمت راست
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "12 ",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "Sessions",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      elevation: 0, // بدون سایه
-                      shadowColor: Colors.transparent,
-                      pressElevation: 0, // موقع کلیک هم سایه نندازه
-                      side: BorderSide.none, // بعضی تم‌ها اینجا لازمه
-                    ),
-                  ],
-                ),
-              ],
+
+                      SizedBox(height: 2),
+                      RawChip(
+                        label: const Text(
+                          "Started 1 October",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 255, 138, 4),
+                            fontSize: 10,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                        backgroundColor: Color.fromARGB(22, 255, 138, 4),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side: BorderSide.none,
+                        ),
+                        elevation: 0, // بدون سایه
+                        shadowColor: Colors.transparent,
+                        pressElevation: 0, // موقع کلیک هم سایه نندازه
+                        side: BorderSide.none, // بعضی تم‌ها اینجا لازمه
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+
+            SizedBox(height: 15),
+
+            Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withValues(alpha: 0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // سمت چپ: آیکن + متن
+                  Column(
+                    children: [
+                      SvgPicture.asset(
+                        "assets/images/icons/buffet.svg", // مسیر فایل svg خودت
+                        width: 50,
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        "Buffet",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // سمت راست: تعداد قدم‌ها + زمان
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "10,000,000 ",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "Rls",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: 2),
+                      RawChip(
+                        label: const Text(
+                          "Started 1 October",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 0, 184, 212),
+                            fontSize: 10,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                        backgroundColor: Color.fromARGB(22, 0, 184, 212),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side: BorderSide.none,
+                        ),
+                        elevation: 0, // بدون سایه
+                        shadowColor: Colors.transparent,
+                        pressElevation: 0, // موقع کلیک هم سایه نندازه
+                        side: BorderSide.none, // بعضی تم‌ها اینجا لازمه
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
