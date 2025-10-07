@@ -50,56 +50,58 @@ class _NavigationLayoutState extends State<NavigationLayout> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 235, 235, 235),
-      appBar: widget.appBar,
-      body: widget.body,
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: Colors.black12, blurRadius: 6, spreadRadius: 2),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: List.generate(_icons.length, (index) {
-            final isActive = _currentIndex == index;
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 235, 235, 235),
+        appBar: widget.appBar,
+        body: widget.body,
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(color: Colors.black12, blurRadius: 6, spreadRadius: 2),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(_icons.length, (index) {
+              final isActive = _currentIndex == index;
 
-            return GestureDetector(
-              onTap: () => _onItemTapped(index),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isActive
-                          ? Color.fromARGB(255, 0, 184, 212)
-                          : Colors.transparent,
+              return GestureDetector(
+                onTap: () => _onItemTapped(index),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isActive
+                            ? Color.fromARGB(255, 0, 184, 212)
+                            : Colors.transparent,
+                      ),
+                      child: Icon(
+                        _icons[index],
+                        color: isActive ? Colors.white : Colors.grey[700],
+                      ),
                     ),
-                    child: Icon(
-                      _icons[index],
-                      color: isActive ? Colors.white : Colors.grey[700],
+                    const SizedBox(height: 4),
+                    Text(
+                      _labels[index],
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isActive
+                            ? Color.fromARGB(255, 0, 184, 212)
+                            : Colors.grey[700],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _labels[index],
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: isActive
-                          ? Color.fromARGB(255, 0, 184, 212)
-                          : Colors.grey[700],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }),
+                  ],
+                ),
+              );
+            }),
+          ),
         ),
       ),
     );
