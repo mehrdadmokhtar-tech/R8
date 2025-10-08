@@ -250,15 +250,24 @@ class _LoginPageState extends State<LoginPage> {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF00B8D4),
+                              disabledBackgroundColor: Colors.grey,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            onPressed: () {
-                              if (!_isLoginLoading) {
-                                _handleLogin(false, "");
-                              }
-                            },
+                            onPressed: _isLoginLoading
+                                ? null // وقتی در حال لود شدن هستیم، دکمه غیرفعاله
+                                : () async {
+                                    setState(() {
+                                      _isLoginLoading = true;
+                                    });
+
+                                    await _handleLogin(false, "");
+
+                                    setState(() {
+                                      _isLoginLoading = false;
+                                    });
+                                  },
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,

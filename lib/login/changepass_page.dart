@@ -17,12 +17,17 @@ class _ChangePassPageState extends State<ChangePassPage> {
 
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  bool _isSaveLoading = false;
 
   Future<void> _handleSaveChanges() async {
     if (!_formKey.currentState!.validate()) return;
 
     final newPassword = _newPasswordController.text.trim();
     final confirmnewPassword = _confirmNewPasswordController.text.trim();
+
+    setState(() {
+      _isSaveLoading = true;
+    });
 
     if (newPassword != confirmnewPassword) {
       // اگر پسوردها یکسان نبود
@@ -35,7 +40,8 @@ class _ChangePassPageState extends State<ChangePassPage> {
       return;
     }
 
-    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     try {
       List<String> nullItems = findNullKeys(args);
       if (nullItems.isNotEmpty) {
@@ -45,13 +51,13 @@ class _ChangePassPageState extends State<ChangePassPage> {
           3,
           'runtime error : args has null key ; $nullItems',
         );
-      }    
+      }
     } catch (e) {
       showTopSnackBar(context, 2, 3, '$e');
     }
     // appLog(args['userId'].toString());
     // appLog(args['serverOtp'].toString());
-    
+
     try {
       final data = await apiChangePassword(
         userid: args['userId'].toString(),
@@ -72,6 +78,12 @@ class _ChangePassPageState extends State<ChangePassPage> {
       }
     } catch (e) {
       showTopSnackBar(context, 2, 3, '$e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSaveLoading = false;
+        });
+      }
     }
   }
 
@@ -221,9 +233,22 @@ class _ChangePassPageState extends State<ChangePassPage> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: _handleSaveChanges,
+                  onPressed: _isSaveLoading
+                      ? null
+                      : () async {
+                          setState(() {
+                            _isSaveLoading = true;
+                          });
+
+                          await _handleSaveChanges();
+
+                          setState(() {
+                            _isSaveLoading = false;
+                          });
+                        },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF00B8D4),
+                    disabledBackgroundColor: Colors.grey,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadiusGeometry.circular(12),
                     ),
@@ -240,6 +265,17 @@ class _ChangePassPageState extends State<ChangePassPage> {
                           color: Colors.white,
                         ),
                       ),
+                      if (_isSaveLoading) ...[
+                        const SizedBox(width: 12),
+                        const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

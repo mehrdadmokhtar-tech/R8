@@ -53,7 +53,8 @@ class _OtpPageState extends State<OtpPage> {
   }
 
   Future<void> _handleVerifyCode() async {
-    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     try {
       List<String> nullItems = findNullKeys(args);
       if (nullItems.isNotEmpty) {
@@ -63,7 +64,7 @@ class _OtpPageState extends State<OtpPage> {
           3,
           'runtime error : args has null key ; $nullItems',
         );
-      }    
+      }
     } catch (e) {
       showTopSnackBar(context, 2, 3, '$e');
     }

@@ -210,15 +210,24 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF00B8D4),
+                          disabledBackgroundColor: Colors.grey,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        onPressed: () {
-                          if (!_isOTPLoading) {
-                            _handleForgotPass();
-                          }
-                        },
+                        onPressed: _isOTPLoading
+                            ? null
+                            : () async {
+                                setState(() {
+                                  _isOTPLoading = true;
+                                });
+
+                                await _handleForgotPass();
+
+                                setState(() {
+                                  _isOTPLoading = false;
+                                });
+                              },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,

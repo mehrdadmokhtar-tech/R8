@@ -14,7 +14,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController nationcodeController = TextEditingController();
   final TextEditingController mobilenoController = TextEditingController();
 
-  bool _isOTPLoading = false; // لودینگ دکمه OTP
+  bool _isRegisterLoading = false; // لودینگ دکمه Reister
   //String? _serverError; // پیام خطای سرور
 
   @override
@@ -31,7 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final mobileno = mobilenoController.text.trim();
 
     setState(() {
-      _isOTPLoading = true;
+      _isRegisterLoading = true;
       //_serverError = null;
     });
 
@@ -56,7 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
     } finally {
       if (mounted) {
         setState(() {
-          _isOTPLoading = false;
+          _isRegisterLoading = false;
         });
       }
     }
@@ -209,15 +209,24 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF00B8D4),
+                          disabledBackgroundColor: Colors.grey,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        onPressed: () {
-                          if (!_isOTPLoading) {
-                            _handleRegister();
-                          }
-                        },
+                        onPressed: _isRegisterLoading
+                            ? null
+                            : () async {
+                                setState(() {
+                                  _isRegisterLoading = true;
+                                });
+
+                                await _handleRegister();
+
+                                setState(() {
+                                  _isRegisterLoading = false;
+                                });
+                              },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -230,7 +239,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 color: Colors.white,
                               ),
                             ),
-                            if (_isOTPLoading) ...[
+                            if (_isRegisterLoading) ...[
                               const SizedBox(width: 12),
                               const SizedBox(
                                 width: 18,
