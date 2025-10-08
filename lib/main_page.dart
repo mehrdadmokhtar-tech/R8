@@ -101,13 +101,15 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // گرفتن تم فعلی (روشن یا تاریک)
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theme.scaffoldBackgroundColor, // ✅ رنگ داینامیک از تم
       body: Center(
         child: Image.asset(
           "assets/images/logo-animate.gif",
-          width: 170,
-          height: 170,
+          width: 200,
+          height: 200,
         ),
       ),
     );

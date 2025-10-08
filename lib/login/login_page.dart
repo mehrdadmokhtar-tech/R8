@@ -97,9 +97,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.black,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 35),
@@ -120,10 +122,10 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         Image.asset('assets/images/logo.png', height: 100),
                         const SizedBox(height: 10),
-                        const Text(
+                        Text(
                           "Login",
                           style: TextStyle(
-                            color: Colors.white,
+                            color: theme.appBarTheme.foregroundColor,
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
                           ),
