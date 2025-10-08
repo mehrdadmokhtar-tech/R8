@@ -168,90 +168,126 @@ class _DashboardPageState extends State<DashboardPage> {
 
             SizedBox(height: 20),
 
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withValues(alpha: 0.2),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // سمت چپ: آیکن + متن Walking
-                  Column(
-                    children: [
-                      SvgPicture.asset(
-                        "assets/images/icons/dumbbell.svg", // مسیر فایل svg خودت
-                        width: 50,
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (context) {
+                    return Dialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20), // گوشه‌های گرد
                       ),
-                      const SizedBox(height: 10),
-                      const Text(
-                        "Cross Fit",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // سمت راست
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text.rich(
-                        TextSpan(
+                      child: Container(
+                        padding: EdgeInsets.all(20),
+                        height: 200,
+                        child: Column(
                           children: [
-                            TextSpan(
-                              text: "12 ",
+                            Text(
+                              "Cross Fit",
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
                               ),
                             ),
-                            TextSpan(
-                              text: "Sessions",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey,
-                              ),
+                            SizedBox(height: 20),
+                            Text(
+                              "اینجا می‌توانید اطلاعات بیشتری درباره جلسات ببینید.",
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context); // بستن مودال
+                              },
+                              child: Text("Close"),
                             ),
                           ],
                         ),
                       ),
-
-                      SizedBox(height: 2),
-                      RawChip(
-                        label: const Text(
-                          "Started 1 October",
+                    );
+                  },
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        SvgPicture.asset(
+                          "assets/images/icons/dumbbell.svg",
+                          width: 50,
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          "Cross Fit",
                           style: TextStyle(
-                            color: Color.fromARGB(255, 255, 138, 4),
-                            fontSize: 10,
-                            fontWeight: FontWeight.w300,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        backgroundColor: Color.fromARGB(22, 255, 138, 4),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "12 ",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "Sessions",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        RawChip(
+                          label: const Text(
+                            "Started 1 October",
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 255, 138, 4),
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          backgroundColor: Color.fromARGB(22, 255, 138, 4),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            side: BorderSide.none,
+                          ),
+                          elevation: 0,
+                          shadowColor: Colors.transparent,
+                          pressElevation: 0,
                           side: BorderSide.none,
                         ),
-                        elevation: 0, // بدون سایه
-                        shadowColor: Colors.transparent,
-                        pressElevation: 0, // موقع کلیک هم سایه نندازه
-                        side: BorderSide.none, // بعضی تم‌ها اینجا لازمه
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
 

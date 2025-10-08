@@ -135,16 +135,9 @@ class _LoginPageState extends State<LoginPage> {
                         // Username
                         TextFormField(
                           controller: usernameController,
-                          style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                            prefixIcon: const Icon(
-                              Icons.person,
-                              color: Colors.white70,
-                            ),
+                            prefixIcon: const Icon(Icons.person),
                             hintText: "Memebr ID",
-                            hintStyle: const TextStyle(color: Colors.white54),
-                            filled: true,
-                            fillColor: Colors.grey[900],
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -177,16 +170,9 @@ class _LoginPageState extends State<LoginPage> {
                         TextFormField(
                           controller: passwordController,
                           obscureText: _obscurePassword,
-                          style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                            prefixIcon: const Icon(
-                              Icons.lock,
-                              color: Colors.white70,
-                            ),
+                            prefixIcon: const Icon(Icons.lock),
                             hintText: "Password",
-                            hintStyle: const TextStyle(color: Colors.white54),
-                            filled: true,
-                            fillColor: Colors.grey[900],
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -237,9 +223,9 @@ class _LoginPageState extends State<LoginPage> {
                                 heightFactor: 1,
                               );
                             },
-                            child: const Text(
+                            child: Text(
                               "Forgot password?",
-                              style: TextStyle(color: Colors.white70),
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
                         ),
@@ -251,7 +237,9 @@ class _LoginPageState extends State<LoginPage> {
                           height: 50,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF00B8D4),
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
                               disabledBackgroundColor: Colors.grey,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -299,9 +287,9 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 15),
 
-                        const Text(
+                        Text(
                           "OR",
-                          style: TextStyle(color: Colors.white70),
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 15),
 
@@ -315,8 +303,10 @@ class _LoginPageState extends State<LoginPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              side: const BorderSide(
-                                color: Color.fromARGB(179, 196, 195, 195),
+                              side: BorderSide(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.secondary, // رنگ حاشیه
                                 width: 2,
                               ),
                             ),
@@ -341,18 +331,22 @@ class _LoginPageState extends State<LoginPage> {
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.nfc_rounded,
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                   size: 25,
                                 ),
                                 const SizedBox(width: 8),
-                                const Text(
+                                Text(
                                   "Login with NFC",
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w300,
-                                    color: Colors.white,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
                                   ),
                                 ),
                                 if (_isNfcLoading) ...[
@@ -376,8 +370,10 @@ class _LoginPageState extends State<LoginPage> {
                         RichText(
                           text: TextSpan(
                             text: "Never logged in before ? ",
-                            style: const TextStyle(
-                              color: Colors.white70,
+                            style: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.color,
                               fontSize: 15,
                             ),
                             children: [
