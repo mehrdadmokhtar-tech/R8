@@ -106,7 +106,10 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/logo.png"
+  image_path: "assets/images/luncher.png" 
+  adaptive_icon_background: "#000000" 
+  adaptive_icon_foreground: "assets/images/luncher.png"
+  adaptive_icon_monochrome: "assets/images/luncher.png" 
 
 flutter_native_splash:
   android: true
@@ -115,6 +118,6 @@ flutter_native_splash:
   color_dark: "#000000"
   image: "assets/images/luncher.png"
   android_12:
-    color: "#000000"
+    color: "#ffffff"
     color_dark: "#000000"
     image: "assets/images/luncher.png"

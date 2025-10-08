@@ -20,17 +20,45 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(textTheme: GoogleFonts.rubikTextTheme()),
+
+      // 👇 این یعنی اپ با تنظیمات سیستم (Dark / Light) هماهنگ میشه
+      themeMode: ThemeMode.system,
+
+      // 🎨 تم روشن
+      theme: ThemeData(
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: Colors.white,
+        textTheme: GoogleFonts.rubikTextTheme(),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          elevation: 1,
+        ),
+      ),
+
+      // 🌙 تم تاریک
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: Colors.black,
+        textTheme: GoogleFonts.rubikTextTheme(ThemeData.dark().textTheme),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
+      ),
+
+      // 🧭 مسیرها
       home: const MainPage(),
       routes: {
-        '/main': (context) => MyApp(),
-        '/login': (context) => LoginPage(),
-        '/forgotpass': (context) => ForgotPassPage(),
-        '/changepass': (context) => ChangePassPage(),
-        '/nfc': (context) => NFCReaderPage(),
-        '/otp': (context) => OtpPage(),
-        '/dashboard': (context) => DashboardPage(),
-        '/register': (context) => RegisterPage(),
+        '/main': (context) => const MyApp(),
+        '/login': (context) => const LoginPage(),
+        '/forgotpass': (context) => const ForgotPassPage(),
+        '/changepass': (context) => const ChangePassPage(),
+        '/nfc': (context) => const NFCReaderPage(),
+        '/otp': (context) => const OtpPage(),
+        '/dashboard': (context) => const DashboardPage(),
+        '/register': (context) => const RegisterPage(),
       },
     );
   }
