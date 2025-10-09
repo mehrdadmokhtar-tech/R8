@@ -66,11 +66,26 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     if (_isLoading) {
-      return const Scaffold(
-        backgroundColor: Colors.black,
+      // return Scaffold(
+      //   backgroundColor: theme.scaffoldBackgroundColor,
+      //   body: Center(
+      //     child: CircularProgressIndicator(color: Colors.tealAccent),
+      //   ),
+      // );
+      return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
         body: Center(
-          child: CircularProgressIndicator(color: Colors.tealAccent),
+          child: Image.asset(
+            isDarkMode
+                ? 'assets/images/logo-animate-black.gif'
+                : 'assets/images/logo-animate-white.gif',
+            width: 200,
+            height: 200,
+          ),
         ),
       );
     }

@@ -72,7 +72,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets: 
       - assets/images/logo.png
-      - assets/images/logo-animate.gif
+      - assets/images/logo-animate-black.gif
+      - assets/images/logo-animate-white.gif
       - assets/images/user-profile.jpg
       - assets/images/icons/dumbbell.svg
       - assets/images/icons/buffet.svg
@@ -106,18 +107,21 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/luncher.png" 
+  image_path: "assets/images/icon-white.png" 
   adaptive_icon_background: "#000000" 
-  adaptive_icon_foreground: "assets/images/luncher.png"
-  adaptive_icon_monochrome: "assets/images/luncher.png" 
+  adaptive_icon_foreground: "assets/images/icon-white.png"
+  adaptive_icon_monochrome: "assets/images/icon-black.png" 
 
 flutter_native_splash:
   android: true
   ios: true
-  color: "#ffffff"
+  color: "#FFFFFF"
+  image: "assets/images/icon-white.png"
   color_dark: "#000000"
-  image: "assets/images/luncher.png"
+  image_dark: "assets/images/icon-black.png"
+
   android_12:
-    color: "#ffffff"
+    color: "#FFFFFF"
+    image: "assets/images/icon-white.png"
     color_dark: "#000000"
-    image: "assets/images/luncher.png"
+    image_dark: "assets/images/icon-black.png"
