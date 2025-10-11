@@ -125,7 +125,9 @@ class _LoginPageState extends State<LoginPage> {
                         Text(
                           "Login",
                           style: TextStyle(
-                            color: theme.appBarTheme.foregroundColor,
+                            color: Theme.of(
+                              context,
+                            ).textTheme.titleLarge?.color,
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
                           ),
@@ -262,21 +264,25 @@ class _LoginPageState extends State<LoginPage> {
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text(
+                                Text(
                                   "LOGIN",
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
                                   ),
                                 ),
                                 if (_isLoginLoading) ...[
                                   const SizedBox(width: 12),
-                                  const SizedBox(
+                                  SizedBox(
                                     width: 18,
                                     height: 18,
                                     child: CircularProgressIndicator(
-                                      color: Colors.white,
+                                      color: Theme.of(
+                                        context,
+                                      ).appBarTheme.foregroundColor,
                                       strokeWidth: 2,
                                     ),
                                   ),

@@ -43,8 +43,9 @@ class MyApp extends StatelessWidget {
           onSurface: Colors.black, // متن روی کارت و دیالوگ
         ),
         textTheme: TextTheme(
-          bodyLarge: TextStyle(color: Colors.black),
+          bodySmall: TextStyle(color: Colors.grey[900]),
           bodyMedium: TextStyle(color: Colors.black87),
+          bodyLarge: TextStyle(color: Colors.black),
           titleLarge: TextStyle(color: Colors.black),
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -73,8 +74,9 @@ class MyApp extends StatelessWidget {
               Colors.white70, // متن روی کارت و دیالوگ // رنگ متن روی دکمه ها
         ),
         textTheme: TextTheme(
-          bodyLarge: TextStyle(color: Colors.white),
+          bodySmall: TextStyle(color: Colors.white70),
           bodyMedium: TextStyle(color: Colors.white70),
+          bodyLarge: TextStyle(color: Colors.white),
           titleLarge: TextStyle(color: Colors.white),
         ),
         inputDecorationTheme: InputDecorationTheme(

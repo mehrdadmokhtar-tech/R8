@@ -67,12 +67,12 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.black,
+      //backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        //backgroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(
-          color: Colors.white,
+          color: Theme.of(context).textTheme.bodyMedium?.color,
           icon: Icon(Icons.close), // آیکون ضربدر برای بسته شدن صفحه
           onPressed: () {
             Navigator.pop(context); // برمی‌گرده به صفحه قبل
@@ -96,7 +96,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white,
+                        color: Theme.of(context).textTheme.titleLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -106,7 +106,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                         fontSize: 13,
                         fontWeight: FontWeight.w100,
                         letterSpacing: 0.3,
-                        color: Colors.white60,
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
                       ),
                     ),
                     const SizedBox(height: 50),
@@ -116,12 +116,8 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                       controller: nationcodeController,
                       keyboardType: TextInputType.phone,
                       maxLength: 10,
-                      style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         hintText: "National ID",
-                        hintStyle: TextStyle(color: Colors.white54),
-                        filled: true,
-                        fillColor: Colors.grey[900],
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -161,12 +157,8 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                       controller: mobilenoController,
                       keyboardType: TextInputType.phone,
                       maxLength: 11,
-                      style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         hintText: "Phone Number",
-                        hintStyle: TextStyle(color: Colors.white54),
-                        filled: true,
-                        fillColor: Colors.grey[900],
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -209,7 +201,9 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                       height: 50,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF00B8D4),
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
                           disabledBackgroundColor: Colors.grey,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -237,7 +231,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
                             ),
                             if (_isOTPLoading) ...[
