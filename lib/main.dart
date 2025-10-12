@@ -39,6 +39,8 @@ class MyApp extends StatelessWidget {
           onPrimary: Colors.white, // رنگ متن روی دکمه ها
           secondary: Colors.grey[900]!,
           onSecondary: Colors.white,
+          primaryContainer: Color.fromARGB(255, 242, 242, 242),
+          onPrimaryContainer: Colors.black,
           surface: Colors.grey[100]!, // کارت، دیالوگ و ...
           onSurface: Colors.black, // متن روی کارت و دیالوگ
         ),
@@ -48,6 +50,11 @@ class MyApp extends StatelessWidget {
           bodyLarge: TextStyle(color: Colors.black),
           titleLarge: TextStyle(color: Colors.black),
         ),
+        navigationBarTheme: NavigationBarThemeData(
+          backgroundColor: Colors.white,
+          indicatorColor: Colors.grey[700],
+        ),
+        dialogTheme: DialogThemeData(backgroundColor: Colors.white),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: Colors.grey[300],
@@ -69,6 +76,8 @@ class MyApp extends StatelessWidget {
           onPrimary: Colors.white,
           secondary: Colors.white70,
           onSecondary: Colors.black,
+          primaryContainer: Color.fromARGB(255, 52, 44, 42),
+          onPrimaryContainer: Colors.white,
           surface: Colors.grey[700]!, // کارت، دیالوگ و ...
           onSurface:
               Colors.white70, // متن روی کارت و دیالوگ // رنگ متن روی دکمه ها
@@ -78,6 +87,13 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(color: Colors.white70),
           bodyLarge: TextStyle(color: Colors.white),
           titleLarge: TextStyle(color: Colors.white),
+        ),
+        navigationBarTheme: NavigationBarThemeData(
+          backgroundColor: Color.fromARGB(255, 52, 44, 42),
+          indicatorColor: Color.fromARGB(255, 221, 213, 211),
+        ),
+        dialogTheme: DialogThemeData(
+          backgroundColor: Color.fromARGB(255, 52, 44, 42),
         ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,

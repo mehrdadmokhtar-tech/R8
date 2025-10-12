@@ -209,19 +209,8 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        onPressed: _isOTPLoading
-                            ? null
-                            : () async {
-                                setState(() {
-                                  _isOTPLoading = true;
-                                });
-
-                                await _handleForgotPass();
-
-                                setState(() {
-                                  _isOTPLoading = false;
-                                });
-                              },
+                        onPressed: _isOTPLoading ? null : _handleForgotPass,
+                        //onPressed: _isOTPLoading ? null : _handleForgotPass,
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,

@@ -93,10 +93,10 @@ class _DashboardPageState extends State<DashboardPage> {
     return NavigationLayout(
       currentIndex: 0,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 235, 235, 235),
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          color: Colors.black,
+          color: Theme.of(context).textTheme.bodyMedium?.color,
           icon: Icon(
             Icons.power_settings_new,
             size: 30,
@@ -165,7 +165,10 @@ class _DashboardPageState extends State<DashboardPage> {
                     children: [
                       Text(
                         'Member ID:  ${_userId.toString()}',
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
+                        ),
                       ),
                       SizedBox(height: 10),
                       Text(
@@ -173,6 +176,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          color: Theme.of(context).textTheme.titleLarge?.color,
                         ),
                       ),
                     ],
@@ -209,11 +213,28 @@ class _DashboardPageState extends State<DashboardPage> {
                             Text(
                               "اینجا می‌توانید اطلاعات بیشتری درباره جلسات ببینید.",
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.pop(context); // بستن مودال
-                              },
-                              child: Text("Close"),
+                            SizedBox(height: 30),
+                            Expanded(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  overlayColor:
+                                      Colors.transparent, // حذف انیمیشن لمس
+                                  shadowColor: Colors.transparent, // حذف سایه
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Close"),
+                              ),
                             ),
                           ],
                         ),
@@ -225,11 +246,11 @@ class _DashboardPageState extends State<DashboardPage> {
               child: Container(
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: Colors.grey.withValues(alpha: .2),
                       blurRadius: 10,
                       offset: const Offset(0, 5),
                     ),
@@ -243,13 +264,20 @@ class _DashboardPageState extends State<DashboardPage> {
                         SvgPicture.asset(
                           "assets/images/icons/dumbbell.svg",
                           width: 50,
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.onPrimaryContainer,
+                            BlendMode.srcIn,
+                          ),
                         ),
                         const SizedBox(height: 10),
-                        const Text(
+                        Text(
                           "Cross Fit",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onPrimaryContainer,
                           ),
                         ),
                       ],
@@ -265,7 +293,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimaryContainer,
                                 ),
                               ),
                               TextSpan(
@@ -273,7 +303,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
-                                  color: Colors.grey,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                 ),
                               ),
                             ],
@@ -281,15 +313,17 @@ class _DashboardPageState extends State<DashboardPage> {
                         ),
                         SizedBox(height: 2),
                         RawChip(
-                          label: const Text(
+                          label: Text(
                             "Started 1 October",
                             style: TextStyle(
-                              color: Color.fromARGB(255, 255, 138, 4),
+                              color: Theme.of(
+                                context,
+                              ).textTheme.bodyLarge?.color,
                               fontSize: 10,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
-                          backgroundColor: Color.fromARGB(22, 255, 138, 4),
+                          backgroundColor: Color.fromARGB(40, 0, 221, 255),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                             side: BorderSide.none,
@@ -311,7 +345,7 @@ class _DashboardPageState extends State<DashboardPage> {
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
@@ -330,13 +364,20 @@ class _DashboardPageState extends State<DashboardPage> {
                       SvgPicture.asset(
                         "assets/images/icons/buffet.svg", // مسیر فایل svg خودت
                         width: 50,
+                        colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.onPrimaryContainer,
+                          BlendMode.srcIn,
+                        ),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
+                      Text(
                         "Buffet",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onPrimaryContainer,
                         ),
                       ),
                     ],
@@ -354,7 +395,9 @@ class _DashboardPageState extends State<DashboardPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimaryContainer,
                               ),
                             ),
                             TextSpan(
@@ -362,7 +405,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
-                                color: Colors.grey,
+                                color: Theme.of(context).colorScheme.secondary,
                               ),
                             ),
                           ],
@@ -371,15 +414,15 @@ class _DashboardPageState extends State<DashboardPage> {
 
                       SizedBox(height: 2),
                       RawChip(
-                        label: const Text(
+                        label: Text(
                           "Started 1 October",
                           style: TextStyle(
-                            color: Color.fromARGB(255, 0, 184, 212),
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
                             fontSize: 10,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
-                        backgroundColor: Color.fromARGB(22, 0, 184, 212),
+                        backgroundColor: Color.fromARGB(40, 0, 221, 255),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                           side: BorderSide.none,

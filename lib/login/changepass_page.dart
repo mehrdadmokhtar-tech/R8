@@ -90,11 +90,11 @@ class _ChangePassPageState extends State<ChangePassPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(
+          color: Theme.of(context).textTheme.bodyMedium?.color,
+        ),
       ),
       body: Padding(
         padding: EdgeInsetsGeometry.symmetric(horizontal: 35),
@@ -103,19 +103,22 @@ class _ChangePassPageState extends State<ChangePassPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 "Change Password",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Theme.of(context).textTheme.titleLarge?.color,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(height: 12),
-              const Text(
+              Text(
                 "Create new password for your account.",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white70, fontSize: 14),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                  fontSize: 14,
+                ),
               ),
 
               SizedBox(height: 30),
@@ -124,15 +127,9 @@ class _ChangePassPageState extends State<ChangePassPage> {
               TextFormField(
                 controller: _newPasswordController,
                 obscureText: _obscurePassword,
-                style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: "New Password",
-                  labelStyle: const TextStyle(
-                    color: Colors.white54,
-                    fontSize: 18,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[900],
+                  labelStyle: const TextStyle(fontSize: 18),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -180,15 +177,9 @@ class _ChangePassPageState extends State<ChangePassPage> {
               TextFormField(
                 controller: _confirmNewPasswordController,
                 obscureText: _obscureConfirmPassword,
-                style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: "Re-enter your password",
-                  labelStyle: const TextStyle(
-                    color: Colors.white54,
-                    fontSize: 18,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[900],
+                  labelStyle: const TextStyle(fontSize: 18),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -247,7 +238,7 @@ class _ChangePassPageState extends State<ChangePassPage> {
                           });
                         },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF00B8D4),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                     disabledBackgroundColor: Colors.grey,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadiusGeometry.circular(12),
@@ -257,12 +248,12 @@ class _ChangePassPageState extends State<ChangePassPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
+                      Text(
                         "Save Changes",
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.onPrimary,
                         ),
                       ),
                       if (_isSaveLoading) ...[

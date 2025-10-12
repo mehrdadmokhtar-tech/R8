@@ -98,30 +98,33 @@ class _OtpPageState extends State<OtpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(
+          color: Theme.of(context).textTheme.bodyMedium?.color,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 35),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               "Enter Code",
               style: TextStyle(
-                color: Colors.white,
+                color: Theme.of(context).textTheme.titleLarge?.color,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 12),
-            const Text(
+            Text(
               "We've sent an OTP code to your phone number",
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white70, fontSize: 14),
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodyMedium?.color,
+                fontSize: 14,
+              ),
             ),
             const SizedBox(height: 30),
 
@@ -130,13 +133,13 @@ class _OtpPageState extends State<OtpPage> {
               appContext: context,
               length: otpLength,
               controller: _pinController,
-              textStyle: TextStyle(color: Colors.white),
               keyboardType: TextInputType.number,
               animationType: AnimationType.scale,
               animationDuration: const Duration(milliseconds: 300),
-              cursorColor: Color.fromARGB(255, 0, 184, 212),
-              enableActiveFill: false,
+              cursorColor: Theme.of(context).colorScheme.primary,
+              enableActiveFill: true,
               autoDisposeControllers: false,
+              backgroundColor: Colors.transparent,
               onChanged: (value) {
                 setState(() {
                   _receivedCode = value;
@@ -154,13 +157,20 @@ class _OtpPageState extends State<OtpPage> {
                 fieldWidth: 50,
                 activeColor: hasError
                     ? Colors.red
-                    : Color.fromARGB(255, 0, 184, 212),
+                    : Theme.of(context).colorScheme.primary,
                 selectedColor: hasError
                     ? Colors.red
-                    : Color.fromARGB(255, 0, 184, 212),
+                    : Theme.of(context).colorScheme.primary,
                 inactiveColor: hasError ? Colors.red : Colors.grey,
-                selectedFillColor: Colors.black,
-                inactiveFillColor: Colors.black,
+                activeFillColor: Theme.of(
+                  context,
+                ).inputDecorationTheme.fillColor,
+                selectedFillColor: Theme.of(
+                  context,
+                ).inputDecorationTheme.fillColor,
+                inactiveFillColor: Theme.of(
+                  context,
+                ).inputDecorationTheme.fillColor,
               ),
             ),
             // پیام خطا
@@ -177,16 +187,19 @@ class _OtpPageState extends State<OtpPage> {
 
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 0, 184, 212),
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
               onPressed: _handleVerifyCode,
-              child: const Text(
+              child: Text(
                 "Verify",
-                style: TextStyle(color: Colors.black, fontSize: 16),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontSize: 16,
+                ),
               ),
             ),
           ],

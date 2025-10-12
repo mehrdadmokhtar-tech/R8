@@ -52,13 +52,12 @@ class _NavigationLayoutState extends State<NavigationLayout> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 235, 235, 235),
         appBar: widget.appBar,
         body: widget.body,
         bottomNavigationBar: Container(
           padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).navigationBarTheme.backgroundColor,
             boxShadow: [
               BoxShadow(color: Colors.black12, blurRadius: 6, spreadRadius: 2),
             ],
@@ -79,12 +78,16 @@ class _NavigationLayoutState extends State<NavigationLayout> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: isActive
-                            ? Color.fromARGB(255, 0, 184, 212)
+                            ? Theme.of(context).colorScheme.primary
                             : Colors.transparent,
                       ),
                       child: Icon(
                         _icons[index],
-                        color: isActive ? Colors.white : Colors.grey[700],
+                        color: isActive
+                            ? Colors.white
+                            : Theme.of(
+                                context,
+                              ).navigationBarTheme.indicatorColor,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -93,8 +96,10 @@ class _NavigationLayoutState extends State<NavigationLayout> {
                       style: TextStyle(
                         fontSize: 12,
                         color: isActive
-                            ? Color.fromARGB(255, 0, 184, 212)
-                            : Colors.grey[700],
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(
+                                context,
+                              ).navigationBarTheme.indicatorColor,
                       ),
                     ),
                   ],
