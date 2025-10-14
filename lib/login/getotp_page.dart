@@ -6,14 +6,14 @@ import 'package:r8fitness/utils/utils.dart';
 
 const int otpLength = 5;
 
-class OtpPage extends StatefulWidget {
-  const OtpPage({super.key});
+class GetOtpPage extends StatefulWidget {
+  const GetOtpPage({super.key});
 
   @override
-  State<OtpPage> createState() => _OtpPageState();
+  State<GetOtpPage> createState() => _GetOtpPageState();
 }
 
-class _OtpPageState extends State<OtpPage> {
+class _GetOtpPageState extends State<GetOtpPage> {
   //late OTPInteractor _otpInteractor;
   OTPTextEditController? _otpController;
   final TextEditingController _pinController = TextEditingController();
@@ -66,7 +66,8 @@ class _OtpPageState extends State<OtpPage> {
         );
       }
     } catch (e) {
-      showTopSnackBar(context, 2, 3, '$e');
+      String errText = errorTracking(e.toString());
+      showTopSnackBar(context, 2, 3, errText);
     }
 
     if (_receivedCode.length == otpLength) {
@@ -77,7 +78,7 @@ class _OtpPageState extends State<OtpPage> {
         });
         await Navigator.pushReplacementNamed(
           context,
-          '/changepass',
+          '/setpass',
           arguments: {'userId': args['userId'], 'serverOtp': args['serverOtp']},
         );
         if (!mounted) return;

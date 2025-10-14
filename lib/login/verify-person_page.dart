@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:r8fitness/utils/utils.dart';
 import 'package:r8fitness/services/api_service.dart';
 
-class ForgotPassPage extends StatefulWidget {
-  const ForgotPassPage({super.key});
+class VerifyPersonPage extends StatefulWidget {
+  const VerifyPersonPage({super.key});
 
   @override
-  State<ForgotPassPage> createState() => _ForgotPassPageState();
+  State<VerifyPersonPage> createState() => _VerifyPersonPageState();
 }
 
-class _ForgotPassPageState extends State<ForgotPassPage> {
+class _VerifyPersonPageState extends State<VerifyPersonPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nationcodeController = TextEditingController();
   final TextEditingController mobilenoController = TextEditingController();
 
-  bool _isOTPLoading = false; // لودینگ دکمه OTP
+  bool _isVerifyPersonLoading = false; // لودینگ دکمه Reister
   //String? _serverError; // پیام خطای سرور
 
   @override
@@ -24,28 +24,27 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
     super.dispose();
   }
 
-  Future<void> _handleForgotPass() async {
+  Future<void> _handleVerifyPerson() async {
     if (!_formKey.currentState!.validate()) return; // اجرای ولیدیشن‌ها
 
     final nationcode = nationcodeController.text.trim();
     final mobileno = mobilenoController.text.trim();
 
     setState(() {
-      _isOTPLoading = true;
+      _isVerifyPersonLoading = true;
       //_serverError = null;
     });
 
     try {
-      final data = await apiForgotPassword(
+      final data = await apiVerifyPerson(
         nationcode: nationcode,
         mobileno: mobileno,
       );
       if (!mounted) return;
-
       if (data['returnValue'] == 1) {
         await Navigator.pushReplacementNamed(
           context,
-          '/otp',
+          '/getotp',
           arguments: {'userId': data['userId'], 'serverOtp': data['otpCode']},
         );
         if (!mounted) return;
@@ -53,11 +52,12 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
         showTopSnackBar(context, 2, 3, data['returnMessage']);
       }
     } catch (e) {
-      showTopSnackBar(context, 2, 3, '$e');
+      String errText = errorTracking(e.toString());
+      showTopSnackBar(context, 2, 3, errText);
     } finally {
       if (mounted) {
         setState(() {
-          _isOTPLoading = false;
+          _isVerifyPersonLoading = false;
         });
       }
     }
@@ -67,13 +67,11 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      //backgroundColor: Colors.black,
       appBar: AppBar(
-        //backgroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(
-          color: Theme.of(context).textTheme.bodyMedium?.color,
-          icon: Icon(Icons.close), // آیکون ضربدر برای بسته شدن صفحه
+          color: Colors.white,
+          icon: Icon(Icons.close), // آیکون ضربدر به جای فلش
           onPressed: () {
             Navigator.pop(context); // برمی‌گرده به صفحه قبل
           },
@@ -92,11 +90,11 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                     Image.asset('assets/images/logo.png', height: 100),
                     const SizedBox(height: 10),
                     Text(
-                      "Forgot Password",
+                      "Verify Person",
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.w500,
-                        color: Theme.of(context).textTheme.titleLarge?.color,
+                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -104,9 +102,9 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                       "Please enter your information to get OTP",
                       style: TextStyle(
                         fontSize: 13,
-                        fontWeight: FontWeight.w100,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: 0.3,
-                        color: Theme.of(context).textTheme.bodyMedium?.color,
+                        color: Colors.white60,
                       ),
                     ),
                     const SizedBox(height: 50),
@@ -116,8 +114,12 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                       controller: nationcodeController,
                       keyboardType: TextInputType.phone,
                       maxLength: 10,
+                      style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         hintText: "National ID",
+                        hintStyle: TextStyle(color: Colors.white54),
+                        filled: true,
+                        fillColor: Colors.grey[900],
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -157,8 +159,12 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                       controller: mobilenoController,
                       keyboardType: TextInputType.phone,
                       maxLength: 11,
+                      style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         hintText: "Phone Number",
+                        hintStyle: TextStyle(color: Colors.white54),
+                        filled: true,
+                        fillColor: Colors.grey[900],
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -201,16 +207,25 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                       height: 50,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.primary,
+                          backgroundColor: const Color(0xFF00B8D4),
                           disabledBackgroundColor: Colors.grey,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        onPressed: _isOTPLoading ? null : _handleForgotPass,
-                        //onPressed: _isOTPLoading ? null : _handleForgotPass,
+                        onPressed: _isVerifyPersonLoading
+                            ? null
+                            : () async {
+                                setState(() {
+                                  _isVerifyPersonLoading = true;
+                                });
+
+                                await _handleVerifyPerson();
+
+                                setState(() {
+                                  _isVerifyPersonLoading = false;
+                                });
+                              },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -220,10 +235,10 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.onPrimary,
+                                color: Colors.white,
                               ),
                             ),
-                            if (_isOTPLoading) ...[
+                            if (_isVerifyPersonLoading) ...[
                               const SizedBox(width: 12),
                               const SizedBox(
                                 width: 18,

@@ -83,8 +83,8 @@ class _DashboardPageState extends State<DashboardPage> {
             isDarkMode
                 ? 'assets/images/logo-animate-black.gif'
                 : 'assets/images/logo-animate-white.gif',
-            width: 200,
-            height: 200,
+            width: 180,
+            height: 180,
           ),
         ),
       );
@@ -93,10 +93,10 @@ class _DashboardPageState extends State<DashboardPage> {
     return NavigationLayout(
       currentIndex: 0,
       appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
+        backgroundColor: const Color.fromARGB(255, 235, 235, 235),
         elevation: 0,
         leading: IconButton(
-          color: Theme.of(context).textTheme.bodyMedium?.color,
+          color: Colors.black,
           icon: Icon(
             Icons.power_settings_new,
             size: 30,
@@ -165,10 +165,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     children: [
                       Text(
                         'Member ID:  ${_userId.toString()}',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).textTheme.bodyLarge?.color,
-                        ),
+                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 10),
                       Text(
@@ -176,7 +173,6 @@ class _DashboardPageState extends State<DashboardPage> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).textTheme.titleLarge?.color,
                         ),
                       ),
                     ],
@@ -213,28 +209,11 @@ class _DashboardPageState extends State<DashboardPage> {
                             Text(
                               "اینجا می‌توانید اطلاعات بیشتری درباره جلسات ببینید.",
                             ),
-                            SizedBox(height: 30),
-                            Expanded(
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(
-                                    context,
-                                  ).colorScheme.primary,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                  overlayColor:
-                                      Colors.transparent, // حذف انیمیشن لمس
-                                  shadowColor: Colors.transparent, // حذف سایه
-                                  foregroundColor: Theme.of(
-                                    context,
-                                  ).colorScheme.onPrimary,
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text("Close"),
-                              ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context); // بستن مودال
+                              },
+                              child: Text("Close"),
                             ),
                           ],
                         ),
@@ -246,11 +225,11 @@ class _DashboardPageState extends State<DashboardPage> {
               child: Container(
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withValues(alpha: .2),
+                      color: Colors.grey.withOpacity(0.2),
                       blurRadius: 10,
                       offset: const Offset(0, 5),
                     ),
@@ -264,20 +243,13 @@ class _DashboardPageState extends State<DashboardPage> {
                         SvgPicture.asset(
                           "assets/images/icons/dumbbell.svg",
                           width: 50,
-                          colorFilter: ColorFilter.mode(
-                            Theme.of(context).colorScheme.onPrimaryContainer,
-                            BlendMode.srcIn,
-                          ),
                         ),
                         const SizedBox(height: 10),
-                        Text(
+                        const Text(
                           "Cross Fit",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onPrimaryContainer,
                           ),
                         ),
                       ],
@@ -293,9 +265,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onPrimaryContainer,
+                                  color: Colors.black,
                                 ),
                               ),
                               TextSpan(
@@ -303,9 +273,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.secondary,
+                                  color: Colors.grey,
                                 ),
                               ),
                             ],
@@ -313,17 +281,15 @@ class _DashboardPageState extends State<DashboardPage> {
                         ),
                         SizedBox(height: 2),
                         RawChip(
-                          label: Text(
+                          label: const Text(
                             "Started 1 October",
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).textTheme.bodyLarge?.color,
+                              color: Color.fromARGB(255, 255, 138, 4),
                               fontSize: 10,
-                              fontWeight: FontWeight.w400,
+                              fontWeight: FontWeight.w300,
                             ),
                           ),
-                          backgroundColor: Color.fromARGB(40, 0, 221, 255),
+                          backgroundColor: Color.fromARGB(22, 255, 138, 4),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                             side: BorderSide.none,
@@ -345,7 +311,7 @@ class _DashboardPageState extends State<DashboardPage> {
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
@@ -364,20 +330,13 @@ class _DashboardPageState extends State<DashboardPage> {
                       SvgPicture.asset(
                         "assets/images/icons/buffet.svg", // مسیر فایل svg خودت
                         width: 50,
-                        colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.onPrimaryContainer,
-                          BlendMode.srcIn,
-                        ),
                       ),
                       const SizedBox(height: 10),
-                      Text(
+                      const Text(
                         "Buffet",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onPrimaryContainer,
                         ),
                       ),
                     ],
@@ -395,9 +354,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onPrimaryContainer,
+                                color: Colors.black,
                               ),
                             ),
                             TextSpan(
@@ -405,7 +362,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
-                                color: Theme.of(context).colorScheme.secondary,
+                                color: Colors.grey,
                               ),
                             ),
                           ],
@@ -414,15 +371,15 @@ class _DashboardPageState extends State<DashboardPage> {
 
                       SizedBox(height: 2),
                       RawChip(
-                        label: Text(
+                        label: const Text(
                           "Started 1 October",
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.bodyLarge?.color,
+                            color: Color.fromARGB(255, 0, 184, 212),
                             fontSize: 10,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w300,
                           ),
                         ),
-                        backgroundColor: Color.fromARGB(40, 0, 221, 255),
+                        backgroundColor: Color.fromARGB(22, 0, 184, 212),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                           side: BorderSide.none,

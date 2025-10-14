@@ -44,11 +44,13 @@ Future<Map<String, dynamic>> apiNFCLogin({required String tagno}) async {
   }
 }
 
-Future<Map<String, dynamic>> refreshToken({
-  required String refreshtoken,
+Future<Map<String, dynamic>> apiVerifyPerson({
+  required String nationcode,
+  required String mobileno,
 }) async {
-  final url = Uri.https(mainAddress, 'api/user/token', {
-    'RefreshToken': refreshtoken,
+  final url = Uri.https(mainAddress, 'api/crm/person-verify', {
+    'NationCode': nationcode,
+    'MobileNo': mobileno,
   });
   appLog(url.toString());
 
@@ -58,20 +60,20 @@ Future<Map<String, dynamic>> refreshToken({
       final Map<String, dynamic> data = jsonDecode(response.body);
       return data;
     } else {
-      throw Exception('Api call error : ${response.statusCode}');
+      throw Exception('Api service call error: ${response.statusCode}');
     }
   } catch (e) {
-    throw Exception('$e');
+    throw Exception('Service call error: $e');
   }
 }
 
-Future<Map<String, dynamic>> apiForgotPassword({
+Future<Map<String, dynamic>> apiVerifyUser({
   required String nationcode,
   required String mobileno,
 }) async {
-  final url = Uri.https(mainAddress, 'api/user/forgotpass', {
-    'Nationcode': nationcode,
-    'Mobileno': mobileno,
+  final url = Uri.https(mainAddress, 'api/user/user-verify', {
+    'NationCode': nationcode,
+    'MobileNo': mobileno,
   });
   appLog(url.toString());
 
@@ -155,12 +157,12 @@ Future<Map<String, dynamic>> apiCehckOtp({
   }
 }
 
-Future<Map<String, dynamic>> apiChangePassword({
+Future<Map<String, dynamic>> apiSetPassword({
   required String userid,
   required String otpcode,
   required String newpassword,
 }) async {
-  final url = Uri.https(mainAddress, 'api/user/chgpass', {
+  final url = Uri.https(mainAddress, 'api/user/setpassword', {
     'UserId': userid,
     'OtpCode': otpcode,
     'NewPassword': newpassword,

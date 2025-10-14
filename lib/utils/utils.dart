@@ -8,6 +8,9 @@ void appLog(String message) {
 String errorTracking(String errText) {
   String outText;
   outText = errText.replaceAll("Exception: ", "");
+  if (outText.contains('Failed to fetch')) {
+    outText = 'Can’t connect to the service . Check your network';
+  }
   return outText;
 }
 

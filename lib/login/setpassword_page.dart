@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:r8fitness/utils/utils.dart';
 import 'package:r8fitness/services/api_service.dart';
 
-class ChangePassPage extends StatefulWidget {
-  const ChangePassPage({super.key});
+class SetPasswordPage extends StatefulWidget {
+  const SetPasswordPage({super.key});
 
   @override
-  State<ChangePassPage> createState() => _ChangePassPageState();
+  State<SetPasswordPage> createState() => _SetPasswordPageState();
 }
 
-class _ChangePassPageState extends State<ChangePassPage> {
+class _SetPasswordPageState extends State<SetPasswordPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmNewPasswordController =
@@ -53,13 +53,14 @@ class _ChangePassPageState extends State<ChangePassPage> {
         );
       }
     } catch (e) {
-      showTopSnackBar(context, 2, 3, '$e');
+      String errText = errorTracking(e.toString());
+      showTopSnackBar(context, 2, 3, errText);
     }
     // appLog(args['userId'].toString());
     // appLog(args['serverOtp'].toString());
 
     try {
-      final data = await apiChangePassword(
+      final data = await apiSetPassword(
         userid: args['userId'].toString(),
         otpcode: args['serverOtp'].toString(),
         newpassword: newPassword,
@@ -77,7 +78,8 @@ class _ChangePassPageState extends State<ChangePassPage> {
         showTopSnackBar(context, 2, 3, data['returnMessage']);
       }
     } catch (e) {
-      showTopSnackBar(context, 2, 3, '$e');
+      String errText = errorTracking(e.toString());
+      showTopSnackBar(context, 2, 3, errText);
     } finally {
       if (mounted) {
         setState(() {
@@ -104,7 +106,7 @@ class _ChangePassPageState extends State<ChangePassPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Change Password",
+                "Set Password",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.titleLarge?.color,
                   fontSize: 24,

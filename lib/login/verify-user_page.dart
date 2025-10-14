@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:r8fitness/utils/utils.dart';
 import 'package:r8fitness/services/api_service.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class VerifyUserPage extends StatefulWidget {
+  const VerifyUserPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<VerifyUserPage> createState() => _VerifyUserPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _VerifyUserPageState extends State<VerifyUserPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nationcodeController = TextEditingController();
   final TextEditingController mobilenoController = TextEditingController();
 
-  bool _isRegisterLoading = false; // لودینگ دکمه Reister
+  bool _isOTPLoading = false; // لودینگ دکمه OTP
   //String? _serverError; // پیام خطای سرور
 
   @override
@@ -24,27 +24,28 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-  Future<void> _handleRegister() async {
+  Future<void> _handleVerifyUser() async {
     if (!_formKey.currentState!.validate()) return; // اجرای ولیدیشن‌ها
 
     final nationcode = nationcodeController.text.trim();
     final mobileno = mobilenoController.text.trim();
 
     setState(() {
-      _isRegisterLoading = true;
+      _isOTPLoading = true;
       //_serverError = null;
     });
 
     try {
-      final data = await apiRegister(
+      final data = await apiVerifyUser(
         nationcode: nationcode,
         mobileno: mobileno,
       );
       if (!mounted) return;
+
       if (data['returnValue'] == 1) {
         await Navigator.pushReplacementNamed(
           context,
-          '/otp',
+          '/getotp',
           arguments: {'userId': data['userId'], 'serverOtp': data['otpCode']},
         );
         if (!mounted) return;
@@ -52,11 +53,12 @@ class _RegisterPageState extends State<RegisterPage> {
         showTopSnackBar(context, 2, 3, data['returnMessage']);
       }
     } catch (e) {
-      showTopSnackBar(context, 2, 3, '$e');
+      String errText = errorTracking(e.toString());
+      showTopSnackBar(context, 2, 3, errText);
     } finally {
       if (mounted) {
         setState(() {
-          _isRegisterLoading = false;
+          _isOTPLoading = false;
         });
       }
     }
@@ -66,13 +68,13 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.black,
+      //backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        //backgroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(
-          color: Colors.white,
-          icon: Icon(Icons.close), // آیکون ضربدر به جای فلش
+          color: Theme.of(context).textTheme.bodyMedium?.color,
+          icon: Icon(Icons.close), // آیکون ضربدر برای بسته شدن صفحه
           onPressed: () {
             Navigator.pop(context); // برمی‌گرده به صفحه قبل
           },
@@ -91,11 +93,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     Image.asset('assets/images/logo.png', height: 100),
                     const SizedBox(height: 10),
                     Text(
-                      "Register",
+                      "Verify User",
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white,
+                        color: Theme.of(context).textTheme.titleLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -103,9 +105,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       "Please enter your information to get OTP",
                       style: TextStyle(
                         fontSize: 13,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w100,
                         letterSpacing: 0.3,
-                        color: Colors.white60,
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
                       ),
                     ),
                     const SizedBox(height: 50),
@@ -115,12 +117,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: nationcodeController,
                       keyboardType: TextInputType.phone,
                       maxLength: 10,
-                      style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         hintText: "National ID",
-                        hintStyle: TextStyle(color: Colors.white54),
-                        filled: true,
-                        fillColor: Colors.grey[900],
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -160,12 +158,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: mobilenoController,
                       keyboardType: TextInputType.phone,
                       maxLength: 11,
-                      style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         hintText: "Phone Number",
-                        hintStyle: TextStyle(color: Colors.white54),
-                        filled: true,
-                        fillColor: Colors.grey[900],
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -208,25 +202,16 @@ class _RegisterPageState extends State<RegisterPage> {
                       height: 50,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF00B8D4),
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
                           disabledBackgroundColor: Colors.grey,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        onPressed: _isRegisterLoading
-                            ? null
-                            : () async {
-                                setState(() {
-                                  _isRegisterLoading = true;
-                                });
-
-                                await _handleRegister();
-
-                                setState(() {
-                                  _isRegisterLoading = false;
-                                });
-                              },
+                        onPressed: _isOTPLoading ? null : _handleVerifyUser,
+                        //onPressed: _isOTPLoading ? null : _handleVerifyUser,
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -236,10 +221,10 @@ class _RegisterPageState extends State<RegisterPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
                             ),
-                            if (_isRegisterLoading) ...[
+                            if (_isOTPLoading) ...[
                               const SizedBox(width: 12),
                               const SizedBox(
                                 width: 18,

@@ -5,7 +5,7 @@ import 'package:r8fitness/services/api_service.dart';
 import 'package:r8fitness/services/storage_service.dart';
 import 'package:r8fitness/services/cache_service.dart';
 import 'package:r8fitness/login/nfcreader_page.dart';
-import 'package:r8fitness/login/forgotpass_page.dart';
+import 'package:r8fitness/login/verify-user_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -81,7 +81,8 @@ class _LoginPageState extends State<LoginPage> {
         showTopSnackBar(context, 2, 3, data['returnMessage']);
       }
     } catch (e) {
-      showTopSnackBar(context, 2, 3, '$e');
+      String errDesc = errorTracking(e.toString());
+      showTopSnackBar(context, 2, 4, errDesc);
     } finally {
       if (mounted) {
         setState(() {
@@ -221,7 +222,7 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () async {
                               await showCustomBottomSheet<String>(
                                 context,
-                                child: ForgotPassPage(),
+                                child: VerifyUserPage(),
                                 heightFactor: 1,
                               );
                             },
@@ -391,8 +392,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    //وقتی کلیک شد اینجا می‌ره
-                                    Navigator.pushNamed(context, '/register');
+                                    Navigator.pushNamed(context, '/verify-u');
                                   },
                               ),
                             ],

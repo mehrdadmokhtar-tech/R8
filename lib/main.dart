@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:r8fitness/login/login_page.dart';
 import 'package:r8fitness/login/nfcreader_page.dart';
-import 'package:r8fitness/login/forgotpass_page.dart';
-import 'package:r8fitness/login/changepass_page.dart';
-import 'package:r8fitness/login/register_page.dart';
-import 'package:r8fitness/login/otp_page.dart';
+import 'package:r8fitness/login/verify-user_page.dart';
+import 'package:r8fitness/login/setpassword_page.dart';
+import 'package:r8fitness/login/verify-person_page.dart';
+import 'package:r8fitness/login/getotp_page.dart';
 import 'package:r8fitness/dashboard/dashboard_page.dart';
 import 'package:r8fitness/main_page.dart';
 
@@ -106,12 +106,12 @@ class MyApp extends StatelessWidget {
       routes: {
         '/main': (context) => const MyApp(),
         '/login': (context) => const LoginPage(),
-        '/forgotpass': (context) => const ForgotPassPage(),
-        '/changepass': (context) => const ChangePassPage(),
+        '/verify-p': (context) => const VerifyPersonPage(),
+        '/verify-u': (context) => const VerifyUserPage(),
+        '/setpass': (context) => const SetPasswordPage(),
         '/nfc': (context) => const NFCReaderPage(),
-        '/otp': (context) => const OtpPage(),
+        '/getotp': (context) => const GetOtpPage(),
         '/dashboard': (context) => const DashboardPage(),
-        '/register': (context) => const RegisterPage(),
       },
     );
   }
