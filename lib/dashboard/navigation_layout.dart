@@ -27,6 +27,7 @@ class _NavigationLayoutState extends State<NavigationLayout> {
 
   final List<String> _labels = ["Dashboard", "Profile", "Payment"];
 
+  @override
   void initState() {
     super.initState();
     _currentIndex = widget.currentIndex;

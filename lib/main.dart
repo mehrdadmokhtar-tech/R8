@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:r8fitness/login/login_page.dart';
 import 'package:r8fitness/login/nfcreader_page.dart';
-import 'package:r8fitness/login/verify-user_page.dart';
 import 'package:r8fitness/login/setpassword_page.dart';
-import 'package:r8fitness/login/verify-person_page.dart';
+import 'package:r8fitness/login/verify_page.dart';
 import 'package:r8fitness/login/getotp_page.dart';
 import 'package:r8fitness/dashboard/dashboard_page.dart';
 import 'package:r8fitness/main_page.dart';
@@ -106,8 +105,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/main': (context) => const MyApp(),
         '/login': (context) => const LoginPage(),
-        '/verify-p': (context) => const VerifyPersonPage(),
-        '/verify-u': (context) => const VerifyUserPage(),
+        '/verify': (context) => const VerifyPage(),
         '/setpass': (context) => const SetPasswordPage(),
         '/nfc': (context) => const NFCReaderPage(),
         '/getotp': (context) => const GetOtpPage(),

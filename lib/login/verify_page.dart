@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:r8fitness/utils/utils.dart';
 import 'package:r8fitness/services/api_service.dart';
 
-class VerifyUserPage extends StatefulWidget {
-  const VerifyUserPage({super.key});
+class VerifyPage extends StatefulWidget {
+  const VerifyPage({super.key});
 
   @override
-  State<VerifyUserPage> createState() => _VerifyUserPageState();
+  State<VerifyPage> createState() => _VerifyPageState();
 }
 
-class _VerifyUserPageState extends State<VerifyUserPage> {
+class _VerifyPageState extends State<VerifyPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nationcodeController = TextEditingController();
   final TextEditingController mobilenoController = TextEditingController();
 
-  bool _isOTPLoading = false; // لودینگ دکمه OTP
+  bool _isVerifyLoading = false; // لودینگ دکمه Reister
   //String? _serverError; // پیام خطای سرور
 
   @override
@@ -24,31 +24,82 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
     super.dispose();
   }
 
-  Future<void> _handleVerifyUser() async {
+  Future<void> _handleVerify() async {
     if (!_formKey.currentState!.validate()) return; // اجرای ولیدیشن‌ها
 
     final nationcode = nationcodeController.text.trim();
     final mobileno = mobilenoController.text.trim();
 
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    try {
+      List<String> nullItems = findNullKeys(args);
+      if (nullItems.isNotEmpty) {
+        showTopSnackBar(
+          context,
+          2,
+          3,
+          'runtime error : args has null key ; $nullItems',
+        );
+        return;
+      }
+    } catch (e) {
+      String errText = errorTracking(e.toString());
+      showTopSnackBar(context, 2, 3, errText);
+    }
+
     setState(() {
-      _isOTPLoading = true;
+      _isVerifyLoading = true;
       //_serverError = null;
     });
 
     try {
-      final data = await apiVerifyUser(
-        nationcode: nationcode,
-        mobileno: mobileno,
-      );
+      Map<String, dynamic> data = {};
+      String reqBy = args['requestBy'].toString();
+      if (reqBy == 'register') {
+        data = await apiVerifyPerson(
+          nationcode: nationcode,
+          mobileno: mobileno,
+        );
+      } else {
+        if (reqBy == 'forgotpass') {
+          data = await apiVerifyUser(
+            nationcode: nationcode,
+            mobileno: mobileno,
+          );
+        }
+      }
       if (!mounted) return;
 
       if (data['returnValue'] == 1) {
-        await Navigator.pushReplacementNamed(
+        String uId = (reqBy == 'register')
+            ? data['personId'].toString()
+            : data['userId'].toString();
+        String uOtp = data['otpCode'].toString();
+
+        final pushResult = await Navigator.pushNamed(
           context,
           '/getotp',
-          arguments: {'userId': data['userId'], 'serverOtp': data['otpCode']},
+          arguments: {'userId': uId, 'otpCode': uOtp},
         );
         if (!mounted) return;
+
+        if (pushResult != null &&
+            pushResult is Map &&
+            pushResult['result'].toString() == 'true') {
+          final pushResult1 = await Navigator.pushNamed(
+            context,
+            '/setpass',
+            arguments: {'requestBy': reqBy, 'userId': uId, 'otpCode': uOtp},
+          );
+          if (!mounted) return;
+
+          if (pushResult1 != null &&
+              pushResult1 is Map &&
+              pushResult1['result'].toString() == 'true') {
+            Navigator.of(context).pop();
+          }
+        }
       } else {
         showTopSnackBar(context, 2, 3, data['returnMessage']);
       }
@@ -58,7 +109,7 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
     } finally {
       if (mounted) {
         setState(() {
-          _isOTPLoading = false;
+          _isVerifyLoading = false;
         });
       }
     }
@@ -68,13 +119,11 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      //backgroundColor: Colors.black,
       appBar: AppBar(
-        //backgroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(
-          color: Theme.of(context).textTheme.bodyMedium?.color,
-          icon: Icon(Icons.close), // آیکون ضربدر برای بسته شدن صفحه
+          color: Colors.white,
+          icon: Icon(Icons.close), // آیکون ضربدر به جای فلش
           onPressed: () {
             Navigator.pop(context); // برمی‌گرده به صفحه قبل
           },
@@ -93,11 +142,11 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
                     Image.asset('assets/images/logo.png', height: 100),
                     const SizedBox(height: 10),
                     Text(
-                      "Verify User",
+                      "Verify Member",
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.w500,
-                        color: Theme.of(context).textTheme.titleLarge?.color,
+                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -105,9 +154,9 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
                       "Please enter your information to get OTP",
                       style: TextStyle(
                         fontSize: 13,
-                        fontWeight: FontWeight.w100,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: 0.3,
-                        color: Theme.of(context).textTheme.bodyMedium?.color,
+                        color: Colors.white60,
                       ),
                     ),
                     const SizedBox(height: 50),
@@ -117,8 +166,12 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
                       controller: nationcodeController,
                       keyboardType: TextInputType.phone,
                       maxLength: 10,
+                      style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         hintText: "National ID",
+                        hintStyle: TextStyle(color: Colors.white54),
+                        filled: true,
+                        fillColor: Colors.grey[900],
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -158,8 +211,12 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
                       controller: mobilenoController,
                       keyboardType: TextInputType.phone,
                       maxLength: 11,
+                      style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         hintText: "Phone Number",
+                        hintStyle: TextStyle(color: Colors.white54),
+                        filled: true,
+                        fillColor: Colors.grey[900],
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -202,16 +259,25 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
                       height: 50,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.primary,
+                          backgroundColor: const Color(0xFF00B8D4),
                           disabledBackgroundColor: Colors.grey,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        onPressed: _isOTPLoading ? null : _handleVerifyUser,
-                        //onPressed: _isOTPLoading ? null : _handleVerifyUser,
+                        onPressed: _isVerifyLoading
+                            ? null
+                            : () async {
+                                setState(() {
+                                  _isVerifyLoading = true;
+                                });
+
+                                await _handleVerify();
+
+                                setState(() {
+                                  _isVerifyLoading = false;
+                                });
+                              },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -221,10 +287,10 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.onPrimary,
+                                color: Colors.white,
                               ),
                             ),
-                            if (_isOTPLoading) ...[
+                            if (_isVerifyLoading) ...[
                               const SizedBox(width: 12),
                               const SizedBox(
                                 width: 18,

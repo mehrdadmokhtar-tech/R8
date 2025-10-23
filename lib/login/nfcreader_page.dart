@@ -11,7 +11,7 @@ class NFCReaderPage extends StatefulWidget {
 
 class _NFCReaderPageState extends State<NFCReaderPage>
     with SingleTickerProviderStateMixin {
-  String? nfcUID;
+  String? resultMsg;
   late AnimationController _controller;
 
   @override
@@ -34,44 +34,50 @@ class _NFCReaderPageState extends State<NFCReaderPage>
   void startNFC() {
     NfcManager.instance.startSession(
       onDiscovered: (NfcTag tag) async {
-        final data = tag.data as Map;
-        appLog("tag Data : $data");
+        try {
+          final data = tag.data as Map;
+          appLog("tag Data : $data");
 
-        List<int>? id;
-        // بررسی نوع کارت  و سپس گرفتن یو آی دی
-        if (data.containsKey("mifareclassic")) {
-          id = List<int>.from(data["mifareclassic"]["identifier"]);
-        } else if (data.containsKey("nfca")) {
-          id = List<int>.from(data["nfca"]["identifier"]);
-        } else if (data.containsKey("mifareultralight")) {
-          id = List<int>.from(data["mifareultralight"]["identifier"]);
-        } else if (data.containsKey("ndefformatable")) {
-          id = List<int>.from(data["ndefformatable"]["identifier"]);
-        }
+          List<int>? id;
+          // بررسی نوع کارت  و سپس گرفتن یو آی دی
+          if (data.containsKey("mifareclassic")) {
+            id = List<int>.from(data["mifareclassic"]["identifier"]);
+          } else if (data.containsKey("nfca")) {
+            id = List<int>.from(data["nfca"]["identifier"]);
+          } else if (data.containsKey("mifareultralight")) {
+            id = List<int>.from(data["mifareultralight"]["identifier"]);
+          } else if (data.containsKey("ndefformatable")) {
+            id = List<int>.from(data["ndefformatable"]["identifier"]);
+          }
 
-        String uidHex = "";
-        String uidNumeric = "";
-        if (id == null) {
-          appLog("⚠️ تگ با فرمت ناشناخته");
-        } else {
-          uidHex = id.map((e) => e.toRadixString(16).padLeft(2, '0')).join('');
-          uidNumeric = id.map((e) => e.toString().padLeft(3, '0')).join('');
+          String uidHex = "";
+          String uidNumeric = "";
+          if (id == null) {
+            appLog("⚠️ تگ با فرمت ناشناخته");
+          } else {
+            uidHex = id
+                .map((e) => e.toRadixString(16).padLeft(2, '0'))
+                .join('');
+            uidNumeric = id.map((e) => e.toString().padLeft(3, '0')).join('');
 
-          appLog("UID Hex : $uidHex");
-          appLog("UID Numeric : $uidNumeric");
+            appLog("UID Hex : $uidHex");
+            appLog("UID Numeric : $uidNumeric");
 
-          NfcManager.instance.stopSession();
+            NfcManager.instance.stopSession();
 
-          setState(() {
-            // nfcUID = uidHex;
-            nfcUID = "Data read successfully .";
-          });
+            setState(() {
+              // resultMsg = uidHex;
+              resultMsg = "Data read successfully .";
+            });
 
-          // برگردوندن UID به صفحهٔ قبل
-          Future.delayed(const Duration(seconds: 1), () {
-            if (!mounted) return;
-            Navigator.pop(context, uidNumeric);
-          });
+            // برگردوندن UID به صفحهٔ قبل
+            Future.delayed(const Duration(seconds: 1), () {
+              if (!mounted) return;
+              Navigator.pop(context, uidNumeric);
+            });
+          }
+        } catch (e) {
+          appLog('$e');
         }
       },
     );
@@ -114,14 +120,14 @@ class _NFCReaderPageState extends State<NFCReaderPage>
 
             // متن وضعیت
             Text(
-              nfcUID == null ? "Tap the tag or band" : "$nfcUID",
+              resultMsg == null ? "Tap the tag or band" : "$resultMsg",
               style: theme.textTheme.titleLarge?.copyWith(
                 color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 20),
 
-            if (nfcUID == null)
+            if (resultMsg == null)
               Text(
                 "Waiting to read data...",
                 style: theme.textTheme.bodyMedium?.copyWith(

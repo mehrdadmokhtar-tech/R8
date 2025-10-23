@@ -112,12 +112,14 @@ Future<Map<String, dynamic>> apiGetNewToken({
 }
 
 Future<Map<String, dynamic>> apiRegister({
-  required String nationcode,
-  required String mobileno,
+  required String personid,
+  required String otpcode,
+  required String password,
 }) async {
   final url = Uri.https(mainAddress, 'api/user/register', {
-    'Nationcode': nationcode,
-    'Mobileno': mobileno,
+    'PersonId': personid,
+    'OtpCode': otpcode,
+    'Password': password,
   });
   appLog(url.toString());
 

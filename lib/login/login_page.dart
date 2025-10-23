@@ -5,7 +5,6 @@ import 'package:r8fitness/services/api_service.dart';
 import 'package:r8fitness/services/storage_service.dart';
 import 'package:r8fitness/services/cache_service.dart';
 import 'package:r8fitness/login/nfcreader_page.dart';
-import 'package:r8fitness/login/verify-user_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -220,11 +219,12 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () async {
-                              await showCustomBottomSheet<String>(
+                              await Navigator.pushNamed(
                                 context,
-                                child: VerifyUserPage(),
-                                heightFactor: 1,
+                                '/verify',
+                                arguments: {'requestBy': 'forgotpass'},
                               );
+                              if (!mounted) return;
                             },
                             child: Text(
                               "Forgot password?",
@@ -391,8 +391,13 @@ class _LoginPageState extends State<LoginPage> {
                                   fontWeight: FontWeight.bold,
                                 ),
                                 recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.pushNamed(context, '/verify-u');
+                                  ..onTap = () async {
+                                    await Navigator.pushNamed(
+                                      context,
+                                      '/verify',
+                                      arguments: {'requestBy': 'register'},
+                                    );
+                                    if (!mounted) return;
                                   },
                               ),
                             ],

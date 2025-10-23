@@ -51,28 +51,43 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
           3,
           'runtime error : args has null key ; $nullItems',
         );
+        return;
       }
     } catch (e) {
       String errText = errorTracking(e.toString());
       showTopSnackBar(context, 2, 3, errText);
     }
-    // appLog(args['userId'].toString());
-    // appLog(args['serverOtp'].toString());
+    //appLog(args['userId'].toString());
+    //appLog(args['otpCode'].toString());
 
     try {
-      final data = await apiSetPassword(
-        userid: args['userId'].toString(),
-        otpcode: args['serverOtp'].toString(),
-        newpassword: newPassword,
-      );
+      String reqBy = args['requestBy'].toString();
+      String uId = args['userId'].toString();
+      String uOtp = args['otpCode'].toString();
+
+      Map<String, dynamic> data = {};
+      if (reqBy == 'register') {
+        data = await apiRegister(
+          personid: uId,
+          otpcode: uOtp,
+          password: newPassword,
+        );
+      } else {
+        if (reqBy == 'forgotpass') {
+          data = await apiSetPassword(
+            userid: uId,
+            otpcode: uOtp,
+            newpassword: newPassword,
+          );
+        }
+      }
       if (!mounted) return;
 
       if (data['returnValue'] == 1) {
-        showTopSnackBar(context, 1, 3, data['returnMessage']);
-        // بعد از 5 ثانیه این صفحه رو ببند و برگرد به صفحه ی اصلی
-        Future.delayed(const Duration(seconds: 5), () {
+        showTopSnackBar(context, 1, 4, data['returnMessage']);
+        Future.delayed(const Duration(seconds: 4), () {
           if (!mounted) return;
-          Navigator.of(context).pop();
+          Navigator.pop(context, {'result': true});
         });
       } else {
         showTopSnackBar(context, 2, 3, data['returnMessage']);

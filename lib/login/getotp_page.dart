@@ -64,24 +64,24 @@ class _GetOtpPageState extends State<GetOtpPage> {
           3,
           'runtime error : args has null key ; $nullItems',
         );
+        return;
       }
     } catch (e) {
       String errText = errorTracking(e.toString());
       showTopSnackBar(context, 2, 3, errText);
     }
+    //appLog(args['otpCode'].toString());
 
     if (_receivedCode.length == otpLength) {
-      if (_receivedCode == args['serverOtp']) {
+      if (_receivedCode == args['otpCode']) {
         setState(() {
           errorMessage = null; // ✅ درست بود، خطا پاک بشه
           hasError = false;
         });
-        await Navigator.pushReplacementNamed(
-          context,
-          '/setpass',
-          arguments: {'userId': args['userId'], 'serverOtp': args['serverOtp']},
-        );
-        if (!mounted) return;
+        Future.delayed(const Duration(seconds: 1), () {
+          if (!mounted) return;
+          Navigator.pop(context, {'result': !hasError});
+        });
       } else {
         setState(() {
           errorMessage = "Oops! The code is wrong.";

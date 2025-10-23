@@ -9,7 +9,10 @@ String errorTracking(String errText) {
   String outText;
   outText = errText.replaceAll("Exception: ", "");
   if (outText.contains('Failed to fetch')) {
-    outText = 'Can’t connect to the service . Check your network';
+    outText = 'Can’t connect to the service .. \n Check your network.';
+  }
+  if (outText.contains('SocketFailed host lookup')) {
+    outText = 'Can’t connect to the service .. \n Check your network.';
   }
   return outText;
 }
