@@ -89,7 +89,14 @@ class _NFCReaderPageState extends State<NFCReaderPage>
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
-      appBar: AppBar(title: const Text("NFC"), centerTitle: true),
+      appBar: AppBar(
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: theme.textTheme.bodyMedium?.color,
+        ),
+        title: const Text("NFC"), 
+        centerTitle: true        
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

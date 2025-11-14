@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:otp_autofill/otp_autofill.dart';
@@ -26,21 +27,23 @@ class _GetOtpPageState extends State<GetOtpPage> {
   void initState() {
     super.initState();
 
-    _otpController =
-        OTPTextEditController(
-          codeLength: otpLength, // طول کد OTP
-          onCodeReceive: (code) {
-            setState(() {
-              _receivedCode = code;
-              _pinController.text = code;
-            });
-            appLog("📩 کد دریافتی: $code");
-          },
-        )..startListenUserConsent((code) {
-          // اینجا regex می‌ذاری برای گرفتن 5 رقم
-          final exp = RegExp(r'\d{' + otpLength.toString() + r'}');
-          return exp.stringMatch(code ?? '') ?? '';
-        });
+    if (!kIsWeb) {
+      _otpController =
+          OTPTextEditController(
+            codeLength: otpLength, // طول کد OTP
+            onCodeReceive: (code) {
+              setState(() {
+                _receivedCode = code;
+                _pinController.text = code;
+              });
+              appLog("📩 کد دریافتی: $code");
+            },
+          )..startListenUserConsent((code) {
+            // اینجا regex می‌ذاری برای گرفتن 5 رقم
+            final exp = RegExp(r'\d{' + otpLength.toString() + r'}');
+            return exp.stringMatch(code ?? '') ?? '';
+          });
+    }
   }
 
   @override
@@ -58,7 +61,7 @@ class _GetOtpPageState extends State<GetOtpPage> {
     try {
       List<String> nullItems = findNullKeys(args);
       if (nullItems.isNotEmpty) {
-        showTopSnackBar(
+        showAnimateTopSnackBar(
           context,
           2,
           3,
@@ -68,7 +71,7 @@ class _GetOtpPageState extends State<GetOtpPage> {
       }
     } catch (e) {
       String errText = errorTracking(e.toString());
-      showTopSnackBar(context, 2, 3, errText);
+      showAnimateTopSnackBar(context, 2, 3, errText);
     }
     //appLog(args['otpCode'].toString());
 
@@ -98,12 +101,12 @@ class _GetOtpPageState extends State<GetOtpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        iconTheme: IconThemeData(
-          color: Theme.of(context).textTheme.bodyMedium?.color,
-        ),
+        iconTheme: IconThemeData(color: theme.textTheme.bodyMedium?.color),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 35),
@@ -113,7 +116,7 @@ class _GetOtpPageState extends State<GetOtpPage> {
             Text(
               "Enter Code",
               style: TextStyle(
-                color: Theme.of(context).textTheme.titleLarge?.color,
+                color: theme.textTheme.titleLarge?.color,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -123,7 +126,7 @@ class _GetOtpPageState extends State<GetOtpPage> {
               "We've sent an OTP code to your phone number",
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Theme.of(context).textTheme.bodyMedium?.color,
+                color: theme.textTheme.bodyMedium?.color,
                 fontSize: 14,
               ),
             ),
@@ -137,7 +140,7 @@ class _GetOtpPageState extends State<GetOtpPage> {
               keyboardType: TextInputType.number,
               animationType: AnimationType.scale,
               animationDuration: const Duration(milliseconds: 300),
-              cursorColor: Theme.of(context).colorScheme.primary,
+              cursorColor: theme.colorScheme.primary,
               enableActiveFill: true,
               autoDisposeControllers: false,
               backgroundColor: Colors.transparent,
@@ -156,22 +159,14 @@ class _GetOtpPageState extends State<GetOtpPage> {
                 borderRadius: BorderRadius.circular(8),
                 fieldHeight: 55,
                 fieldWidth: 50,
-                activeColor: hasError
-                    ? Colors.red
-                    : Theme.of(context).colorScheme.primary,
+                activeColor: hasError ? Colors.red : theme.colorScheme.primary,
                 selectedColor: hasError
                     ? Colors.red
-                    : Theme.of(context).colorScheme.primary,
+                    : theme.colorScheme.primary,
                 inactiveColor: hasError ? Colors.red : Colors.grey,
-                activeFillColor: Theme.of(
-                  context,
-                ).inputDecorationTheme.fillColor,
-                selectedFillColor: Theme.of(
-                  context,
-                ).inputDecorationTheme.fillColor,
-                inactiveFillColor: Theme.of(
-                  context,
-                ).inputDecorationTheme.fillColor,
+                activeFillColor: theme.inputDecorationTheme.fillColor,
+                selectedFillColor: theme.inputDecorationTheme.fillColor,
+                inactiveFillColor: theme.inputDecorationTheme.fillColor,
               ),
             ),
             // پیام خطا
@@ -188,7 +183,7 @@ class _GetOtpPageState extends State<GetOtpPage> {
 
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
+                backgroundColor: theme.colorScheme.primary,
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -198,7 +193,7 @@ class _GetOtpPageState extends State<GetOtpPage> {
               child: Text(
                 "Verify",
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: theme.colorScheme.onPrimary,
                   fontSize: 16,
                 ),
               ),

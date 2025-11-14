@@ -9,15 +9,51 @@ class SetPasswordPage extends StatefulWidget {
   State<SetPasswordPage> createState() => _SetPasswordPageState();
 }
 
+
 class _SetPasswordPageState extends State<SetPasswordPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmNewPasswordController =
-      TextEditingController();
-
+  final TextEditingController _confirmNewPasswordController = TextEditingController();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _isSaveLoading = false;
+  String _reqBy = "";
+  String _userId = "";
+  String _uOtp = "";
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    try {
+      List<String> nullItems = findNullKeys(args);
+      if (nullItems.isNotEmpty) {
+        showAnimateTopSnackBar(
+          context,
+          2,
+          3,
+          'runtime error : args has null key ; $nullItems',
+        );
+        return;
+      }
+    } catch (e) {
+      String errText = errorTracking(e.toString());
+      showAnimateTopSnackBar(context, 2, 3, errText);
+    }
+
+    setState(() {
+      _reqBy = args['requestBy'].toString();
+      _userId = args['userId'].toString();
+      _uOtp = args['otpCode'].toString();
+    });
+
+    appLog('userid :$_userId');
+  }
 
   Future<void> _handleSaveChanges() async {
     if (!_formKey.currentState!.validate()) return;
@@ -31,7 +67,7 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
 
     if (newPassword != confirmnewPassword) {
       // اگر پسوردها یکسان نبود
-      showTopSnackBar(
+      showAnimateTopSnackBar(
         context,
         2,
         3,
@@ -40,43 +76,22 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
       return;
     }
 
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    try {
-      List<String> nullItems = findNullKeys(args);
-      if (nullItems.isNotEmpty) {
-        showTopSnackBar(
-          context,
-          2,
-          3,
-          'runtime error : args has null key ; $nullItems',
-        );
-        return;
-      }
-    } catch (e) {
-      String errText = errorTracking(e.toString());
-      showTopSnackBar(context, 2, 3, errText);
-    }
     //appLog(args['userId'].toString());
     //appLog(args['otpCode'].toString());
 
     try {
-      String reqBy = args['requestBy'].toString();
-      String uId = args['userId'].toString();
-      String uOtp = args['otpCode'].toString();
-
       Map<String, dynamic> data = {};
-      if (reqBy == 'register') {
+      if (_reqBy == 'register') {
         data = await apiRegister(
-          personid: uId,
-          otpcode: uOtp,
+          personid: _userId,
+          otpcode: _uOtp,
           password: newPassword,
         );
       } else {
-        if (reqBy == 'forgotpass') {
+        if (_reqBy == 'forgotpass') {
           data = await apiSetPassword(
-            userid: uId,
-            otpcode: uOtp,
+            userid: _userId,
+            otpcode: _uOtp,
             newpassword: newPassword,
           );
         }
@@ -84,17 +99,17 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
       if (!mounted) return;
 
       if (data['returnValue'] == 1) {
-        showTopSnackBar(context, 1, 4, data['returnMessage']);
+        showAnimateTopSnackBar(context, 1, 4, data['returnMessage']);
         Future.delayed(const Duration(seconds: 4), () {
           if (!mounted) return;
           Navigator.pop(context, {'result': true});
         });
       } else {
-        showTopSnackBar(context, 2, 3, data['returnMessage']);
+        showAnimateTopSnackBar(context, 2, 3, data['returnMessage']);
       }
     } catch (e) {
       String errText = errorTracking(e.toString());
-      showTopSnackBar(context, 2, 3, errText);
+      showAnimateTopSnackBar(context, 2, 3, errText);
     } finally {
       if (mounted) {
         setState(() {
@@ -106,15 +121,15 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        iconTheme: IconThemeData(
-          color: Theme.of(context).textTheme.bodyMedium?.color,
-        ),
+        iconTheme: IconThemeData(color: theme.textTheme.bodyMedium?.color),
       ),
       body: Padding(
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 35),
+        padding: const EdgeInsets.symmetric(horizontal: 35),
         child: Form(
           key: _formKey,
           child: Column(
@@ -123,7 +138,7 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
               Text(
                 "Set Password",
                 style: TextStyle(
-                  color: Theme.of(context).textTheme.titleLarge?.color,
+                  color: theme.textTheme.titleLarge?.color,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -133,11 +148,28 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
                 "Create new password for your account.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Theme.of(context).textTheme.bodyMedium?.color,
-                  fontSize: 14,
+                  color: theme.textTheme.bodyMedium?.color,
+                  fontSize: 15,
                 ),
               ),
-
+              SizedBox(height: 30),
+              Text(
+                "Your membership id will be : " ,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: theme.textTheme.bodyMedium?.color,
+                  fontSize: 17,
+                ),
+              ),
+              Text(
+                "$_userId ",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: theme.textTheme.bodyMedium?.color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
               SizedBox(height: 30),
 
               // فیلد رمز عبور
@@ -147,23 +179,6 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
                 decoration: InputDecoration(
                   labelText: "New Password",
                   labelStyle: const TextStyle(fontSize: 18),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: Color.fromARGB(255, 46, 46, 46),
-                      width: 1,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: Color.fromARGB(87, 0, 187, 212),
-                      width: 2.5,
-                    ),
-                  ),
                   suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
@@ -197,23 +212,6 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
                 decoration: InputDecoration(
                   labelText: "Re-enter your password",
                   labelStyle: const TextStyle(fontSize: 18),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: Color.fromARGB(255, 46, 46, 46),
-                      width: 1,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: Color.fromARGB(87, 0, 187, 212),
-                      width: 2.5,
-                    ),
-                  ),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscureConfirmPassword
@@ -255,10 +253,10 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
                           });
                         },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    backgroundColor: theme.colorScheme.primary,
                     disabledBackgroundColor: Colors.grey,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.circular(12),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   child: Row(
@@ -266,11 +264,11 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "Save Changes",
+                        "Save",
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: theme.colorScheme.onPrimary,
                         ),
                       ),
                       if (_isSaveLoading) ...[

@@ -66,22 +66,24 @@ class _LoginPageState extends State<LoginPage> {
 
         //ذخیره اطلاعات یوزر
         final int userId = data['userId'] ?? 0;
-        final String userName = data['userName'] ?? '';
+        final String userFirstName = data['userFirstName'] ?? '';
+        final String userLastName = data['userLastName'] ?? '';
         final String userPhoto = data['userPhoto'] ?? '';
         await CacheService.instance.save(
           userId: userId,
-          userName: userName,
+          userFirstName: userFirstName,
+          userLastName: userLastName,
           userPhoto: userPhoto,
         );
 
         if (!mounted) return;
-        Navigator.pushReplacementNamed(context, '/dashboard');
+        Navigator.pushReplacementNamed(context, '/navi');
       } else {
-        showTopSnackBar(context, 2, 3, data['returnMessage']);
+        showAnimateTopSnackBar(context, 2, 3, data['returnMessage']);
       }
     } catch (e) {
       String errDesc = errorTracking(e.toString());
-      showTopSnackBar(context, 2, 4, errDesc);
+      showAnimateTopSnackBar(context, 2, 4, errDesc);
     } finally {
       if (mounted) {
         setState(() {
@@ -125,9 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                         Text(
                           "Login",
                           style: TextStyle(
-                            color: Theme.of(
-                              context,
-                            ).textTheme.titleLarge?.color,
+                            color: theme.textTheme.titleLarge?.color,
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
                           ),
@@ -140,23 +140,6 @@ class _LoginPageState extends State<LoginPage> {
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.person),
                             hintText: "Memebr ID",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 46, 46, 46),
-                                width: 1,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                color: Color.fromARGB(87, 0, 187, 212),
-                                width: 2.5,
-                              ),
-                            ),
                           ),
                           keyboardType: TextInputType.phone,
                           validator: (value) {
@@ -175,23 +158,6 @@ class _LoginPageState extends State<LoginPage> {
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.lock),
                             hintText: "Password",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 46, 46, 46),
-                                width: 1,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                color: Color.fromARGB(87, 0, 187, 212),
-                                width: 2.5,
-                              ),
-                            ),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _obscurePassword
@@ -228,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             child: Text(
                               "Forgot password?",
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              style: theme.textTheme.bodyMedium,
                             ),
                           ),
                         ),
@@ -240,9 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 50,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(
-                                context,
-                              ).colorScheme.primary,
+                              backgroundColor: theme.colorScheme.primary,
                               disabledBackgroundColor: Colors.grey,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -270,9 +234,7 @@ class _LoginPageState extends State<LoginPage> {
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onPrimary,
+                                    color: theme.colorScheme.onPrimary,
                                   ),
                                 ),
                                 if (_isLoginLoading) ...[
@@ -281,9 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                                     width: 18,
                                     height: 18,
                                     child: CircularProgressIndicator(
-                                      color: Theme.of(
-                                        context,
-                                      ).appBarTheme.foregroundColor,
+                                      color: theme.appBarTheme.foregroundColor,
                                       strokeWidth: 2,
                                     ),
                                   ),
@@ -294,10 +254,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 15),
 
-                        Text(
-                          "OR",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
+                        Text("OR", style: theme.textTheme.bodyMedium),
                         const SizedBox(height: 15),
 
                         // NFC Button
@@ -311,9 +268,7 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               side: BorderSide(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.secondary, // رنگ حاشیه
+                                color: theme.colorScheme.secondary, // رنگ حاشیه
                                 width: 2,
                               ),
                             ),
@@ -340,9 +295,7 @@ class _LoginPageState extends State<LoginPage> {
                               children: [
                                 Icon(
                                   Icons.nfc_rounded,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.secondary,
+                                  color: theme.colorScheme.secondary,
                                   size: 25,
                                 ),
                                 const SizedBox(width: 8),
@@ -351,9 +304,7 @@ class _LoginPageState extends State<LoginPage> {
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w300,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.secondary,
+                                    color: theme.colorScheme.secondary,
                                   ),
                                 ),
                                 if (_isNfcLoading) ...[
@@ -378,9 +329,7 @@ class _LoginPageState extends State<LoginPage> {
                           text: TextSpan(
                             text: "Never logged in before ? ",
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).textTheme.bodyMedium?.color,
+                              color: theme.textTheme.bodyMedium?.color,
                               fontSize: 15,
                             ),
                             children: [

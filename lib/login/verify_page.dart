@@ -35,7 +35,7 @@ class _VerifyPageState extends State<VerifyPage> {
     try {
       List<String> nullItems = findNullKeys(args);
       if (nullItems.isNotEmpty) {
-        showTopSnackBar(
+        showAnimateTopSnackBar(
           context,
           2,
           3,
@@ -45,7 +45,7 @@ class _VerifyPageState extends State<VerifyPage> {
       }
     } catch (e) {
       String errText = errorTracking(e.toString());
-      showTopSnackBar(context, 2, 3, errText);
+      showAnimateTopSnackBar(context, 2, 3, errText);
     }
 
     setState(() {
@@ -101,11 +101,11 @@ class _VerifyPageState extends State<VerifyPage> {
           }
         }
       } else {
-        showTopSnackBar(context, 2, 3, data['returnMessage']);
+        showAnimateTopSnackBar(context, 2, 3, data['returnMessage']);
       }
     } catch (e) {
       String errText = errorTracking(e.toString());
-      showTopSnackBar(context, 2, 3, errText);
+      showAnimateTopSnackBar(context, 2, 3, errText);
     } finally {
       if (mounted) {
         setState(() {
@@ -117,12 +117,15 @@ class _VerifyPageState extends State<VerifyPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
-          color: Colors.white,
+          color: theme.textTheme.bodyMedium?.color,
           icon: Icon(Icons.close), // آیکون ضربدر به جای فلش
           onPressed: () {
             Navigator.pop(context); // برمی‌گرده به صفحه قبل
@@ -144,19 +147,19 @@ class _VerifyPageState extends State<VerifyPage> {
                     Text(
                       "Verify Member",
                       style: TextStyle(
+                        color: theme.textTheme.titleLarge?.color,
                         fontSize: 25,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 10),
                     Text(
                       "Please enter your information to get OTP",
                       style: TextStyle(
+                        color: theme.textTheme.titleMedium?.color,
                         fontSize: 13,
                         fontWeight: FontWeight.w300,
                         letterSpacing: 0.3,
-                        color: Colors.white60,
                       ),
                     ),
                     const SizedBox(height: 50),
@@ -166,35 +169,7 @@ class _VerifyPageState extends State<VerifyPage> {
                       controller: nationcodeController,
                       keyboardType: TextInputType.phone,
                       maxLength: 10,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: "National ID",
-                        hintStyle: TextStyle(color: Colors.white54),
-                        filled: true,
-                        fillColor: Colors.grey[900],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 46, 46, 46),
-                            width: 1,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(87, 0, 187, 212),
-                            width: 2.5,
-                          ),
-                        ),
-                        errorStyle: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w100,
-                          height: 1.5,
-                        ),
-                      ),
+                      decoration: InputDecoration(hintText: "National ID"),
                       validator: (value) {
                         if ((value?.trim() ?? '').isEmpty) {
                           return "Please enter your National ID.";
@@ -211,35 +186,7 @@ class _VerifyPageState extends State<VerifyPage> {
                       controller: mobilenoController,
                       keyboardType: TextInputType.phone,
                       maxLength: 11,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: "Phone Number",
-                        hintStyle: TextStyle(color: Colors.white54),
-                        filled: true,
-                        fillColor: Colors.grey[900],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 46, 46, 46),
-                            width: 1,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(87, 0, 187, 212),
-                            width: 2.5,
-                          ),
-                        ),
-                        errorStyle: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w100,
-                          height: 1.5,
-                        ),
-                      ),
+                      decoration: InputDecoration(hintText: "Phone Number"),
                       validator: (value) {
                         if ((value?.trim() ?? '').isEmpty) {
                           return "Please enter your Phone Number.";

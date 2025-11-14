@@ -17,6 +17,13 @@ String errorTracking(String errText) {
   return outText;
 }
 
+String addComma(int number) {
+  return number.toString().replaceAllMapped(
+    RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+    (Match m) => '${m[1]},',
+  );
+}
+
 void showDialogMessage(BuildContext context, String message) {
   showDialog(
     context: context,
@@ -35,7 +42,7 @@ void showDialogMessage(BuildContext context, String message) {
   );
 }
 
-void showTopSnackBar(
+void showAnimateTopSnackBar(
   BuildContext context,
   int colorType,
   int delaySeconds,
@@ -62,6 +69,24 @@ void showTopSnackBar(
 }
 
 void showBottomSnackBar(BuildContext context, String message) {
+  final theme = Theme.of(context);
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      backgroundColor: theme.colorScheme.primary,
+      content: Text(
+        'Tap agian to exit',
+        style: TextStyle(
+          color: theme.textTheme.titleLarge?.color,
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      duration: Duration(seconds: 2),
+    ),
+  );
+}
+
+void showAnimateBottomSnackBar(BuildContext context, String message) {
   Flushbar(
     messageText: Center(
       child: Text(

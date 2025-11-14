@@ -46,7 +46,7 @@ class _MainPageState extends State<MainPage> {
 
     if (!isExpired) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacementNamed(context, '/dashboard');
+        Navigator.pushReplacementNamed(context, '/navi');
       });
     } else {
       // تلاش برای دریافت اکسس توکن جدید
@@ -62,12 +62,12 @@ class _MainPageState extends State<MainPage> {
             refreshToken: refreshToken,
           );
           if (!mounted) return;
-          Navigator.pushReplacementNamed(context, '/dashboard');
+          Navigator.pushReplacementNamed(context, '/navi');
         } else {
           Navigator.pushReplacementNamed(context, '/login');
         }
       } catch (e) {
-        showTopSnackBar(context, 2, 3, '$e');
+        showAnimateTopSnackBar(context, 2, 3, '$e');
         appLog('$e');
       }
     }

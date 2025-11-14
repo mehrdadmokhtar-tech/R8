@@ -1,8 +1,19 @@
 import 'dart:convert'; // برای تبدیل JSON
 import 'package:http/http.dart' as http;
 import 'package:r8fitness/utils/utils.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 const mainAddress = "api.r8fitness.ir";
+
+bool isAccessTokenExpired({
+  required String accesstoken,
+}) {
+ try {
+    return JwtDecoder.isExpired(accesstoken);
+  } catch (e) {
+    return true; 
+  }
+}
 
 Future<Map<String, dynamic>> apiLogin({
   required String userid,
