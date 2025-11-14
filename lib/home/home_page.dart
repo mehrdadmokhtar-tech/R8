@@ -281,7 +281,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           const SizedBox(height: 10),
                           const Text(
-                            "Training",
+                            "Exercise",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
